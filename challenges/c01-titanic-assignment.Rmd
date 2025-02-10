@@ -237,6 +237,8 @@ ggplot(df_survived, aes(x = Class, y = Prop, fill = Sex))+
     - the plot shows a 100% survival rate in both 1st and 2nd class in q4, this is a result of the 
     proportion of male and female children survived overlapping the column that shows the proportion of 
     male and female adult survived in the plot. thus showing only the 100% survivor of children, covering      the proportion of adults survivor.
+    
+    s
 
 # Notes
 
