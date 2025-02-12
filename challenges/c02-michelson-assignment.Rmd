@@ -1,7 +1,7 @@
 ---
 title: "Michelson Speed-of-light Measurements"
-author: "(Your name here)"
-date: 2020-
+author: "(Khor Zhi Hong)"
+date: 2025-Feb-12
 output: 
   github_document:
     toc: true
@@ -85,7 +85,12 @@ df_michelson %>% glimpse()
 
 ```{r q1-task}
 ## TODO: Compute summaries
-df_q1 <- NA
+df_q1 <- df_michelson %>%
+  group_by(Distinctness) %>%
+  summarise(
+    n=n(),
+    MeanVelocity = round(mean(Velocity))
+  )
 df_q1 %>%
   arrange(desc(Distinctness)) %>%
   knitr::kable()
@@ -93,9 +98,12 @@ df_q1 %>%
 
 **Observations**:
 - Write your observations here!
-  - (Your response here)
+  - they have the same value distinctness and n while their MeanVelocity have a difference of 2 each.
 - Why might your table differ from Michelson's?
-  - (Your response here)
+  - the dataset used for the MeanVelocity is different
+  -the measuring tools used may have resulted in the different data set collected 
+  -the data processing method may be different, which some dataset may have been excluded or correct resulting difference in dataset
+  -The mean velocity may have been rounded off differently resulting in slight differences of 2.
 
 The `Velocity` values in the dataset are the speed of light *in air*; Michelson
 introduced a couple of adjustments to estimate the speed of light in a vacuum.
@@ -108,7 +116,8 @@ observations in the dataset.
 
 ```{r q2-task}
 ## TODO: Adjust the data, assign to df_q2
-df_q2 <- NA
+df_q2 <- df_michelson %>%
+  mutate(VelocityVacuum = Velocity +92)
 
 df_q2
 ```
@@ -137,13 +146,29 @@ problems uncertainty includes some amount of human judgment.[2]
 ```{r q3-task}
 ## TODO: Compare Michelson's estimate and error against the true value
 ## Your code here!
+MordenLightspeed<- 299792.458
+uncertainty_michelson<- LIGHTSPEED_PM
+error_michelson<- MordenLightspeed - LIGHTSPEED_MICHELSON
+
+Mestimate<- ifelse(abs(error_michelson) > uncertainty_michelson,"Underestimate",
+                ifelse(abs(error_michelson) < uncertainty_michelson, "Overestimate",
+                "Accurate"))
+
+data.frame(
+  LIGHTSPEED_MICHELSON=LIGHTSPEED_MICHELSON,
+  MordenLightspeed= MordenLightspeed,
+  uncertainty_michelson= uncertainty_michelson,
+  True_error=error_michelson,
+  Over_or_Under_estimate=Mestimate
+)
 ```
 
 **Observations**:
 - Is Michelson's estimate of the error (his uncertainty) greater or less than the true error?
-  - (Your response here)
+  - His estimate of error is lesser than his true error
 - Make a quantitative comparison between Michelson's uncertainty and his error.
-  - (Your response here)
+  - he under estimated his uncertainty, where his true error value(absolute value) is larger than the uncertainty made.
+  -the Michelson light speed is 151.542 lower than the modern light speed, this negative True error.
 
 The following plot shows all of Michelson's data as a [control chart](https://en.wikipedia.org/wiki/Control_chart); this sort of plot is common in manufacturing, where it is used to help determine if a manufacturing process is under [statistical control](https://en.wikipedia.org/wiki/Statistical_process_control). Each dot is one of Michelson's measurements, and the grey line connects the mean taken for each day. The same plot also shows simulated data using a probability model. We'll get into statistics later in the course; for now, let's focus on understanding what real and simulated data tend to look like.
 
@@ -208,16 +233,94 @@ df_q2 %>%
 
 **Observations**:
 Similarities
-- (your responses here)
+- both display similar trend and pattern in velocity against time.
+-both have similar mean velocity in the middle 300000 and 299900
+- judging the data with normal distribution, the standard deviation seems to look similar where the overall variance around the mean is similar
 Differences
-- (your responses here)
+- the outliers value in the real data seems to be larger than the outlier values of the simulated data 
+-between jun 09 to jun 23, the real data seems to be more clustered than the simulated data, where simulated data seems to have the data points more spaced apart
+-The real data seems to show greater fluctuations than compared to simulated data within jun 02 to jun 16, while stimulated data seems to show slightly greater fluctuation than real data from jun 23 to jun 30
 
 ### __q5__ You have access to a few other variables. Construct a **at least three** visualizations of `VelocityVacuum` against these other factors. Are there other patterns in the data that might help explain the difference between Michelson's estimate and `LIGHTSPEED_VACUUM`?
+```{r}
+# i assume we use the VelocityVacuum in df_q2 and put it over Q4
+## Calibrate simulated data
+v_mean <-
+  df_q2 %>%
+  summarize(m = mean(VelocityVacuum)) %>%
+  pull(m)
+v_sd <-
+  df_q2 %>%
+  summarize(s = sd(VelocityVacuum)) %>%
+  pull(s)
+
+## Visualize
+set.seed(101)
+df_q2 %>%
+  mutate(Simulated = rnorm(n(), mean = v_mean, sd = v_sd)) %>%
+  rename(Real = VelocityVacuum) %>%
+  pivot_longer(
+    cols = c(Simulated, Real),
+    names_to = "source",
+    values_to = "velocity"
+  ) %>%
+
+  ggplot(aes(Distinctness, velocity)) +
+  geom_hline(
+    yintercept = LIGHTSPEED_MICHELSON,
+    linetype = "dotted"
+  ) +
+  geom_hline(
+    yintercept = LIGHTSPEED_MICHELSON - LIGHTSPEED_PM,
+    linetype = "dashed"
+  ) +
+  geom_hline(
+    yintercept = LIGHTSPEED_MICHELSON + LIGHTSPEED_PM,
+    linetype = "dashed"
+  ) +
+
+  geom_line(
+    data = . %>%
+      group_by(Distinctness, source) %>%
+      summarize(velocity_mean = mean(velocity)),
+    mapping = aes(y = velocity_mean),
+    color = "grey50"
+  ) +
+  geom_point(
+    mapping = aes(y = velocity),
+    size = 0.8
+  ) +
+
+  facet_grid(source~.) +
+  theme_minimal() +
+  labs(
+    x = "Date of Measurement (1879)",
+    y = "Velocity (in Vacuum)"
+  )
+```
+
 
 **Observations**:
 
 - Make sure to record observations on your graphs!
 
+While plotting Velocity against time
+-the outliers seems to bring about greater fluctuations to the graph
+-the plots are for spaced apart 
+-the outliers and the fluctuations may explain why there is discrepancies in Michelson's estimate
+-there seems to be a weaker correlations between temperature and velocity than date and velocity
+
+
+while plotting velocity against Distinctness of image
+- the poor images (1) seems to be more spaced apart compared to 2 and 3, which seems to introduce more variability
+-the good images (3) seems to be more clustered and higher velocity than (2) and (3)
+-the errors may be related to the distinctness of image, the poorer the distinctness of image the increase of error 
+
+
+
+while plotting velocity against date
+- there seems to be a larger deviations from the mean and also variance than when plotting against temperature, 
+- there is a greater fluctuations than temperature, and there maybe impact of temperature on the fluctuation of velocity against time.
 
 
 ## Bibliography
