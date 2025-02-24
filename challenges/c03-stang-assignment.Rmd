@@ -1,7 +1,7 @@
 ---
 title: "Aluminum Data"
-author: "(Your name here)"
-date: 2020-
+author: "Zhi Hong Khor"
+date: 2025-02-19
 output:
   github_document:
     toc: true
@@ -66,9 +66,17 @@ Note that these data are not tidy! The data in this form are convenient for repo
 
 ```{r q1-task}
 ## TASK: Tidy `df_stang`
-df_stang_long <-
-  df_stang
-
+df_stang_long <-df_stang %>%
+  pivot_longer(
+    cols = -c(thick, alloy),
+    names_to = c( ".value", "angle"),
+    names_sep = "_",
+    values_drop_na = TRUE
+    
+    # cols = everything()
+  ) %>%
+  filter(E > 0, nu > 0) %>%
+   mutate(angle = as.integer(angle))
 df_stang_long
 ```
 
@@ -103,19 +111,26 @@ print("Very good!")
 
 ```{r q2-task}
 ##
+length(unique(df_stang_long$alloy))
+length(unique(df_stang_long$angle))
+length(unique(df_stang_long$thick))
 ```
 
 **Observations**:
 
 - Is there "one true value" for the material properties of Aluminum?
-  - (Your response here)
+  - 
 - How many aluminum alloys are in this dataset? How do you know?
-  - (Your response here)
+  - 1, find the length of unique alloy in dataset, shown in q2-task
+  
 - What angles were tested?
-  - (Your response here)
+  - 3
+  
 - What thicknesses were tested?
-  - (Your response here)
+  - 4
+  
 - (Write your own question here)
+  -investigate if there is a relationship between E and nu 
 
 ## Visualize
 <!-- ------------------------- -->
@@ -124,17 +139,28 @@ print("Very good!")
 
 ```{r q3-task}
 ## TASK: Investigate your question from q1 here
+ggplot(df_stang_long, aes(x=E,y=nu))+
+  geom_point(aes(color = alloy)) +
+  geom_smooth(method = "lm", color="red")+
+  labs(tittle="E and nu", 
+  x="young's modulus(E)",
+  y="poisson's ratio(nu)")
+  
+correlation <- cor(df_stang_long$E, df_stang_long$nu, use = "complete.obs")
+correlation
 ```
 
 **Observations**:
 
-- (Address your question from q1 here)
+- the correlation coefficient 0.667717 between young's modulus and poisson's ratio indicated a positive relationship between these two property for this alloy al_24st. which means as young's modulus increases, poisson's ratio tends to increase. however it is not very strong correlation. furthermore the plot shows the dataset being very spread out and far from the regression line, with a wide confidence interval, which further suggest that the association between E and nu is not strong.
 
 ### __q4__ Consider the following statement:
 
 > "A material's property (or material property) is an intensive property of some material, i.e. a physical property that does not depend on the amount of the material."[2]
 
 Note that the "amount of material" would vary with the thickness of a tested plate. Does the following graph support or contradict the claim that "elasticity `E` is an intensive material property." Why or why not? Is this evidence *conclusive* one way or another? Why or why not?
+
+
 
 ```{r q4-vis}
 ## NOTE: No need to change; run this chunk
@@ -148,9 +174,10 @@ df_stang_long %>%
 **Observations**:
 
 - Does this graph support or contradict the claim above?
-  - (Your response here)
+  - the graph is plotting E against nu, with the color representing thickness. the plot shows a distinct cluster of larger thickness 0.081 at the bottom left while smallest thickness E>10500,occupying the top part of the graph. The distinct cluster of 0.081 seems to suggest E and nu depend on the thickness of the material. The plot also show some relationship between the thickness and E property, where smaller thickness shows Higher.
+  
 - Is this evidence *conclusive* one way or another?
-  - (Your response here)
+  - to a large extend it is not conclusive.Though the graph shows a possible relationship between thickness, E and nu, the lack of distinct differences across the thickness and the property and lack of number of data points makes the evidence not necessary conclusive. The similarity between thick 0.064 and thick 0.032 and lack of distinct cluster also makes it less conclusive ( this maybe due to the critical point of change of elasticity being between 0.081 to 0.064 ).
 
 # References
 <!-- -------------------------------------------------- -->
