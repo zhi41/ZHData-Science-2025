@@ -1,7 +1,7 @@
 ---
 title: "Gapminder"
-author: "(Your name here)"
-date: 2020-
+author: "khor zhi hong"
+date: 2020-2-3
 output:
   github_document:
     toc: true
@@ -57,11 +57,27 @@ dataset?
 
 ```{r q0-task}
 ## TASK: Do your "first checks" here!
+
+gapminder
+
+summary(gapminder)
+
+colSums(is.na(gapminder))
+
+
 ```
 
 **Observations**:
 
 - Write all variable names here
+  -Country 
+  -continent
+  -year
+  -pop( population of the country)
+  -gdpPercap(GDP per capita)
+
+No Na data under the heads
+
 
 ### __q1__ Determine the most and least recent years in the `gapminder` dataset.
 
@@ -69,8 +85,9 @@ dataset?
 
 ```{r q1-task}
 ## TASK: Find the largest and smallest values of `year` in `gapminder`
-year_max <- NA_real_
-year_min <- NA_real_
+years <- gapminder %>% pull(year)
+year_max <- max(years)
+year_min <- min(years)
 ```
 
 Use the following test to check your work.
@@ -96,26 +113,90 @@ You may encounter difficulties in visualizing these data; if so document your ch
 
 ```{r q2-task}
 ## TASK: Create a visual of gdpPercap vs continent
+
+gapminder_min_year <- gapminder %>% 
+  filter(year == year_min)
+
+
+ggplot(gapminder_min_year, aes(x = continent, y = gdpPercap)) +
+  geom_boxplot() +
+  labs(title = paste("GDP per Capita by Continent", year_min),
+       x = "Continent",
+       y = "GDP per Capita")
+
+ggplot(gapminder_min_year, aes(x = continent, y = log10(gdpPercap))) +
+  geom_boxplot() +
+  labs(title = paste("Log10 GDP per Capita by Continent ", year_min),
+       x = "Continent",
+       y = "Log10 GDP per Capita")
 ```
 
 **Observations**:
 
 - Write your observations here
+  -the boxplot are all squished together and close to zero
+  -there is a very large outlier in asia 
+  -most of the countries in all the continent are below 15000 gdpPercap
+  -both africa and asia seems to have the low median GDP per capita 
 
 **Difficulties & Approaches**:
 
 - Write your challenges and your approach to solving them
+challenge:
+  -the boxplot are all squished together and hard to visualise the data
+  -but boxplot is still a good way to visualise the data as it shows the median GDP per capita and the range and outliers. And by putting them side by side can give a better comparison    of the mentioned variables
+approach:
+  -since dataset is squished together can use logarithm transformation to make the dataset more distributed and return the data in specific base 
+  
 
 ### __q3__ You should have found *at least* three outliers in q2 (but possibly many more!). Identify those outliers (figure out which countries they are).
 
 ```{r q3-task}
 ## TASK: Identify the outliers from q2
+
+ggplot(gapminder_min_year, aes(x = continent, y = log10(gdpPercap))) +
+  geom_boxplot() +
+  geom_text(aes(label = ifelse(gdpPercap %in% boxplot.stats(gdpPercap)$out, as.character(country), ""))) +
+  labs(title = paste("GDP per Capita by Continent in", year_min),
+       x = "Continent",
+       y = "GDP per Capita")
+
 ```
 
 **Observations**:
 
 - Identify the outlier countries from q2
-  - (Your response here)
+  following are the few countires that exited the whiskers of their continent boxplot and can be seen on the boxplot
+  -Kuwait 
+  -United states & Canada
+
+honorable mentions that are outside the boxplot iqr
+-Bahrain
+-Switzerland
+-united kingdom
+-Netherlands
+-New Zealand
+
+  
+  
+```{r}
+# gapminder_min_year <- gapminder %>%
+#   filter(year == year_min)
+# 
+# iqr <- IQR(gapminder_min_year$gdpPercap)
+# 
+# q1 <- quantile(gapminder_min_year$gdpPercap, 0.25)
+# q3 <- quantile(gapminder_min_year$gdpPercap, 0.75)
+# lower_bound <- q1 - 1.5 * iqr
+# upper_bound <- q3 + 1.5 * iqr
+# 
+# outlier_countries <- gapminder_min_year %>%
+#   filter(gdpPercap < lower_bound | gdpPercap > upper_bound) %>%
+#   select(country, gdpPercap)
+# 
+# outlier_countries
+```
+  
 
 *Hint*: For the next task, it's helpful to know a ggplot trick we'll learn in an upcoming exercise: You can use the `data` argument inside any `geom_*` to modify the data that will be plotted *by that geom only*. For instance, you can use this trick to filter a set of points to label:
 
@@ -139,11 +220,90 @@ gapminder %>%
 
 ```{r q4-task}
 ## TASK: Create a visual of gdpPercap vs continent
+year_max <- max(gapminder$year)
+
+gapminder_selected_years <- gapminder %>%
+  filter(year %in% c(year_min, year_max))
+
+
+# initial move but this squish everything together and hard to visualise anything 
+# outlier_countries <- gapminder_selected_years %>%
+#   filter(lifeExp %in% boxplot.stats(lifeExp)$out) %>%
+#   pull(country)
+
+
+# I did this by min then max individually 
+gapminder_selected_years <- gapminder_selected_years %>%
+  group_by(year, continent) %>%
+  mutate(
+    iqr = IQR(gdpPercap),
+    q1 = quantile(gdpPercap, 0.25),
+    q3 = quantile(gdpPercap, 0.75),
+    lower_bound = q1 - 1.5 * iqr,
+    upper_bound = q3 + 1.5 * iqr
+  )
+
+outlier_countries <- gapminder_selected_years %>%
+  filter(gdpPercap < lower_bound | gdpPercap > upper_bound) %>%
+  pull(country)
+# by putting gapminder_selected_years it does not put two legends for two separate years 
+
+
+ggplot(gapminder_selected_years, aes(x = continent, y = gdpPercap)) +
+  geom_boxplot() +
+  geom_point(
+    data = gapminder_selected_years %>% filter(country %in% outlier_countries),
+    aes(color = country),
+    size = 2
+  ) +
+    facet_wrap(~year)
+  labs(title = "GDP per Capita by Continent for min and max years",
+       x = "Continent",
+       y = "GDP per Capita") 
+         
 ```
 
 **Observations**:
 
-- Write your observations here
+- Write your observations here( i did the min outliers then max outliers, one by one as it will squish the data, then i double checked with the code below)
+
+  -there are 11 countries that are outside of the whiskers of the boxplot of their own continent
+  -the GDP per capita in 1952 is relatively low for most continents which maybe due to the volatile state of the financial world 
+  -over the 55 years the economic disparity within the continents and across the continents have increase greatly 
+  -Asia Europe and Oceania have seen greater increase in the GDP over the years 
+  -the outlier Kuwait have show lower GDP per capita which maybe due to the changing economic situation over the years as technology improves 
+  -Oceania and Europe shows highest GDP per capita among the other continent and remained that way over the years 
+  -Africa remains the lowest gdp per capita and does not show much improvement over 55 years which may be due to the geography as other continent ahve shown significant improvements
+  -singapore have greatly improved over the years with the becoming it the highest gdp per capita in 2007
+
+```{r}
+
+# 
+
+# gapminder_selected_years <- gapminder %>%
+#   filter(year %in% c(year_min, year_max))
+# 
+# 
+# gapminder_selected_years <- gapminder_selected_years %>%
+#   group_by(year, continent) %>%
+#   mutate(
+#     iqr = IQR(gdpPercap),
+#     q1 = quantile(gdpPercap, 0.25),
+#     q3 = quantile(gdpPercap, 0.75),
+#     lower_bound = q1 - 1.5 * iqr,
+#     upper_bound = q3 + 1.5 * iqr
+#   )
+# 
+# 
+# outlier_countries <- gapminder_selected_years %>%
+#   filter(gdpPercap < lower_bound | gdpPercap > upper_bound) %>%
+#   select(country, gdpPercap, continent, year)
+# 
+# print(outlier_countries)
+```
+
+
+
 
 # Your Own EDA
 <!-- -------------------------------------------------- -->
@@ -152,22 +312,140 @@ Now it's your turn! We just went through guided EDA considering the GDP per capi
 
 ### __q5__ Create *at least* three new figures below. With each figure, try to pose new questions about the data.
 
+Is there a relationship between GDP per capita and population.
+
 ```{r q5-task1}
 ## TASK: Your first graph
+
+
+gapminder %>%
+  filter(year == year_max) %>%
+  ggplot(aes(x = gdpPercap, y = pop, size = lifeExp, color = continent)) +
+  geom_point(alpha = 0.5) +
+  scale_x_log10() +
+  scale_y_log10() +
+  labs(title = "GDP per Capita vs. Population 2007",
+       x = "log GDP per Capita",
+       y = "log Population",
+       size = "Life Expectancy",
+       color = "Continent") 
+
+
 ```
-
 - (Your notes and observations here)
+Is there a relationship between GDP per capita and population.
 
+
+-Countries with higher GDP per capita tend to have higher life expectancy (larger circles)
+
+-With many countries having large populations but lower life expectancy.But there is no strong link between gdp per capita as some countries with higher gdp per capita have much smaller life expectancy. same situation for population 
+
+-Asia has some of the most populous countries, and its life expectancy seems to be relatively similar to those countries in Europe and Americas despite having lower gdp per capita. The population size seems to have poor link with the life expectancy for asia.
+
+-The Americas and Europe generally have higher GDP per capita with moderate population sizes.
+
+-there seems to be very weak link between population and gdp per capita 
+
+
+
+How has life expectancy changed across continents over the years?
 ```{r q5-task2}
 ## TASK: Your second graph
+
+gapminder %>%
+  ggplot(aes(x = year, y = lifeExp, color = continent)) +
+  geom_line(stat = "summary", fun = "mean") +
+  labs(title = "Average Life Expectancy Over Time by Continent",
+       x = "Year",
+       y = "Life Expectancy",
+       color = "Continent") 
+
 ```
 
 - (Your notes and observations here)
+How has life expectancy changed across continents over the years?
+
+-The graph shows that life expectancy has generally increased across all continents from 1950 to 2000. 
+
+  -The rate of improvement varies:
+    -Africa had the lowest life expectancy initially and, while it has improved, its growth appears to slow down in later years.
+    -Oceania and Europe have consistently high life expectancy and have a steady increase.
+    -Americas and Asia started at lower levels but have significant improvements over time.
+
+
+
+
+How does the distribution of life expectancy and GDP per capita vary across continents in 1952 and 2007?
 
 ```{r q5-task3}
 ## TASK: Your third graph
+
+
+year_max <- max(gapminder$year)
+year_min <- min(gapminder$year)
+
+
+gapminder_selected_years <- gapminder %>%
+  filter(year %in% c(year_min, year_max))
+
+
+outlier_countries <- gapminder_selected_years %>%
+  filter(lifeExp %in% boxplot.stats(lifeExp)$out) %>%
+  pull(country)
+
+
+
+ggplot(gapminder_selected_years, aes(x = continent, y = lifeExp)) +
+  geom_boxplot() +
+  geom_point(
+    data = gapminder_selected_years %>% filter(country %in% outlier_countries),
+    aes(color = country),
+    size = 2
+  ) +
+  facet_wrap(~year) +
+  labs(title = "Life Expectancy by Continent for Min and Max Years",
+       x = "Continent",
+       y = "Life Expectancy") 
+
+
+
+
+
+gapminder_selected_years <- gapminder %>%
+  filter(year %in% c(year_min, year_max))
+
+
+gapminder_selected_years <- gapminder_selected_years %>%
+  group_by(year, continent) %>%
+  mutate(
+    iqr = IQR(lifeExp),
+    q1 = quantile(lifeExp, 0.25),
+    q3 = quantile(lifeExp, 0.75),
+    lower_bound = q1 - 1.5 * iqr,
+    upper_bound = q3 + 1.5 * iqr
+  )
+
+
+outlier_countries <- gapminder_selected_years %>%
+  filter(lifeExp < lower_bound | lifeExp > upper_bound) %>%
+  select(country, lifeExp, continent, year)
+
+print(outlier_countries)
+
+
+
 ```
 
 - (Your notes and observations here)
 
+How does the distribution of life expectancy and GDP per capita vary across continents in 1952 and 2007?
 
+  -Afghanistan life have not increase significantly as compared to the countries in asia, being an outlier of Life Expectancy: 43.828 years. This maybe due to the conflicts and geography of afghanistan.
+  
+  - Reunion in 1952 have Life Expectancy: 52.724 year, which is much higher than the rest of the countries in afica, which maybe due to the slightly better living condition from the better gdp per capita
+  
+  -in 1952 Europe and Oceania had the highest median life expectancies, while Africa had the lowest.
+  
+  -in 2007 Life expectancy increased across all continents, with Europe and Oceania still leading, and Africa showing significant improvement but still lagging behind other continents.
+  
+  -Specific outliers are marked as points outside the whiskers of the box plots are Afghanistan, Haiti, Reunion, and Turkey.
