@@ -1,7 +1,7 @@
 ---
 title: "COVID-19"
-author: "(Your name here)"
-date: 2020-
+author: "(Khor Zhi Hong)"
+date: 2020-3-9
 output:
   github_document:
     toc: true
@@ -79,7 +79,16 @@ That's the high-level view; now let's dig into the details.
 
 ```{r q1-task}
 ## TASK: Load the census bureau data with the following tibble name.
-df_pop <- NA
+df_pop <- "./data/ACSDT5Y2018.B01003-Data.csv"
+
+df_pop <- read_csv(df_pop, skip = 1) %>%
+  select(
+    id = 1, 
+    `Geographic Area Name` = 2, 
+    `Estimate!!Total` = 3, 
+    `Margin of Error!!Total` = 4
+  )
+head(df_pop)
 ```
 
 *Note*: You can find information on 1-year, 3-year, and 5-year estimates [here](https://www.census.gov/programs-surveys/acs/guidance/estimates.html). The punchline is that 5-year estimates are more reliable but less current.
@@ -95,7 +104,7 @@ The New York Times is publishing up-to-date data on COVID-19 on [GitHub](https:/
 
 ```{r q2-task}
 ## TASK: Find the URL for the NYT covid-19 county-level data
-url_counties <- NA_character_
+url_counties <- 'https://raw.githubusercontent.com/nytimes/covid-19-data/refs/heads/master/us-counties.csv'
 ```
 
 Once you have the url, the following code will download a local copy of the data, then load the data into R.
@@ -128,6 +137,7 @@ To get a sense of our task, let's take a glimpse at our two data sources.
 ## NOTE: No need to change this; just execute
 df_pop %>% glimpse
 df_covid %>% glimpse
+
 ```
 
 To join these datasets, we'll need to use [FIPS county codes](https://en.wikipedia.org/wiki/FIPS_county_code).[2] The last `5` digits of the `id` column in `df_pop` is the FIPS county code, while the NYT data `df_covid` already contains the `fips`.
@@ -136,7 +146,11 @@ To join these datasets, we'll need to use [FIPS county codes](https://en.wikiped
 
 ```{r q3-task}
 ## TASK: Create a `fips` column by extracting the county code
-df_q3 <- NA
+df_q3 <- df_pop %>%
+  mutate(fips = str_sub(id, -5, -1))  
+
+
+df_q3 %>% glimpse()
 ```
 
 Use the following test to check your answer.
@@ -156,7 +170,11 @@ print("Very good!")
 
 ```{r q4-task}
 ## TASK: Join df_covid and df_q3 by fips.
-df_q4 <- NA
+df_q4 <- df_covid %>%
+  left_join(df_q3, by = "fips")
+
+df_q4 %>% glimpse()
+
 ```
 
 Use the following test to check your answer.
@@ -220,7 +238,16 @@ Now that we've done the hard work of loading and wrangling the data, we can fina
 ```{r q5-task}
 ## TASK: Normalize cases and deaths
 df_normalized <-
-  df_data
+  df_data %>%
+  mutate(
+    cases_per100k = (cases/population) * 100000,
+    deaths_per100k = (deaths/population) * 100000
+  )
+
+
+# df_normalized %>% glimpse()
+# df_normalized%>%
+#   filter(fips == "48301")
 ```
 
 You may use the following test to check your work.
@@ -289,12 +316,34 @@ Compute the mean and standard deviation for `cases_per100k` and `deaths_per100k`
 
 ```{r q6-task}
 ## TASK: Compute mean and sd for cases_per100k and deaths_per100k
+
+
+df_summary <- df_normalized %>%
+  filter(date == max(date), !is.na(population), population > 0) %>%
+  summarise(
+    mean_cases_per100k = mean(cases_per100k, na.rm = TRUE),
+    sd_cases_per100k   = sd(cases_per100k, na.rm = TRUE),
+    mean_deaths_per100k = mean(deaths_per100k, na.rm = TRUE),
+    sd_deaths_per100k   = sd(deaths_per100k, na.rm = TRUE)
+  )
+
+
+
+df_summary
+# df_summary2
+# df_summary3
 ```
 
 - Which rows did you pick?
-  - (Your response here)
+  - Rows where population is greater than 0 
+  - Filter out rows where there is a Na value
+  - only the latest date is used for each county
+  
 - Why?
-  - (Your response here)
+  - when doing mean and standard deviation the missing population such as 0 will greatly distort the calculation, giving infinite result
+  -There are NA values in the population and using the NA values into the calculation will return NA therefore NA data are removed
+  -the data is the collection of covid cases and death and is update by the date, thus most data have repeats, starting from very low and accumulative. Since the data is accumulative, it seems to be better to just use the latest date for comparison 
+  
 
 ### __q7__ Find and compare the top 10
 
@@ -303,19 +352,118 @@ Find the top 10 counties in terms of `cases_per100k`, and the top 10 in terms of
 ```{r q7-task}
 ## TASK: Find the top 10 max cases_per100k counties; report populations as well
 
+# df_pop %>%
+#   filter(str_detect(`Geographic Area Name`, "Loving County"))
+# df_covid %>%
+#   filter(fips == "48301")
+# huh somehow the data just have more covid cases than the population
+
+
+top_10_cases <- df_normalized %>%
+  arrange(desc(cases_per100k)) %>%
+  distinct(county, .keep_all = TRUE) %>%
+  slice(1:10) %>%
+  select(
+    county, 
+    state, 
+    date, 
+    cases, 
+    cases_per100k, 
+    population)
+
+top_10_cases
+
+
 ## TASK: Find the top 10 deaths_per100k counties; report populations as well
+
+top_10_deaths <- df_normalized %>%
+  arrange(desc(deaths_per100k)) %>%        
+  distinct(county, .keep_all = TRUE) %>%     
+  slice(1:10) %>%                          
+  select(
+    county, 
+    state, 
+    population, 
+    deaths, 
+    deaths_per100k)
+
+top_10_deaths
+
+
+
+
 ```
 
 **Observations**:
-
+24773.98	6232.789	375.1242	159.7369	
 - (Note your observations here!)
+  -There is significantly higher cases_per100k than the mean_cases_per100k, and also for deaths_per100k against mean_deaths_per100k .the reason maybe due top 10 county have much smaller population compared to other county, with a lower number of population, even a small number of case/deaths can result in an extremely high per 100k rate
+
+  -loving have a the highest cases_per100k which maybe due to the relatively small population size and having more cases than the population. this maybe due to having recurring covid cases in the population or people outside the population are also counted when they visit the hospital in the county.
+  -furthermore loving have top 10 death_per_100k despite only 1 death
+  
 - When did these "largest values" occur?
-  - (Your response here)
+  - At the latest date as this is due to the data being accumulative, updated according to the date and adds up.
 
 ## Self-directed EDA
 <!-- ------------------------- -->
 
 ### __q8__ Drive your own ship: You've just put together a very rich dataset; you now get to explore! Pick your own direction and generate at least one punchline figure to document an interesting finding. I give a couple tips & ideas below:
+
+
+```{r}
+latest_data <- df_normalized %>%
+  filter(date == max(date)) %>% 
+  filter(!is.na(population) & population > 0)
+
+ggplot(latest_data, aes(x = population, y = cases_per100k)) +
+  geom_point(alpha = 0.5, color = "blue") +
+  scale_x_log10() +
+  labs(
+    title = "County Population vs COVID Cases_per_100k (Latest date)",
+    x = "County Population (log scale)",
+    y = "COVID Cases_per_100k"
+  ) +
+  theme_minimal()
+
+ggplot(latest_data, aes(x = population, y = cases)) +
+  geom_point(alpha = 0.5, color = "red") +
+  scale_x_log10() +
+  labs(
+    title = "County Population vs COVID Cases (All Data)",
+    x = "County Population (log scale)",
+    y = "COVID Cases") +
+  theme_minimal()
+
+high_case_counties <- df_normalized %>%
+  filter(cases_per100k > 50000) %>%
+  arrange(desc(cases_per100k)) %>%
+  distinct(county, .keep_all = TRUE)
+
+case_counties <- df_normalized %>%
+  filter(cases > 100000) %>%
+  arrange(desc(cases)) %>%
+  distinct(county, .keep_all = TRUE)
+
+lowest_10_cases <- latest_data %>%
+  arrange(cases) %>%
+  distinct(county, .keep_all = TRUE) %>%
+  slice(1:10) %>%
+  select(
+    county, 
+    state, 
+    date, 
+    cases, 
+    cases_per100k, 
+    population)
+
+lowest_10_cases
+
+high_case_counties
+case_counties
+```
+
+
 
 ### Ideas
 <!-- ------------------------- -->
@@ -329,6 +477,10 @@ Find the top 10 counties in terms of `cases_per100k`, and the top 10 in terms of
 
 **DO YOUR OWN ANALYSIS HERE**
 
+I could not think of a punchline but i was curious about if there is a correlation between small population size and variance of cases_per100k due to with a lower number of population, even a small number of case/deaths can result in an extremely high per 100k. But it turns out that other loving being an extreme outlier, most of the data shows a relatively similar range of cases_per100k regardless of the population size. Where the medium sized county having quite a few showing greater variance than those in the smaller population sized county. 
+
+I guess SIZE ISNT EVERYTHING, IT ALSO DEPENDS ON THE TECHNIQUE and the efficiency of the covid policy put in place to curb the spread and also many other factors like population density. 
+
 ### Aside: Some visualization tricks
 <!-- ------------------------- -->
 
@@ -336,23 +488,23 @@ These data get a little busy, so it's helpful to know a few `ggplot` tricks to h
 
 ```{r ma-example}
 ## NOTE: No need to change this; just an example
-df_normalized %>%
-  filter(
-    state == "Massachusetts", # Focus on Mass only
-    !is.na(fips), # fct_reorder2 can choke with missing data
-  ) %>%
-
-  ggplot(
-    aes(date, cases_per100k, color = fct_reorder2(county, date, cases_per100k))
-  ) +
-  geom_line() +
-  scale_y_log10(labels = scales::label_number_si()) +
-  scale_color_discrete(name = "County") +
-  theme_minimal() +
-  labs(
-    x = "Date",
-    y = "Cases (per 100,000 persons)"
-  )
+# df_normalized %>%
+#   filter(
+#     state == "Massachusetts", # Focus on Mass only
+#     !is.na(fips), # fct_reorder2 can choke with missing data
+#   ) %>%
+# 
+#   ggplot(
+#     aes(date, cases_per100k, color = fct_reorder2(county, date, cases_per100k))
+#   ) +
+#   geom_line() +
+#   scale_y_log10(labels = scales::label_number_si()) +
+#   scale_color_discrete(name = "County") +
+#   theme_minimal() +
+#   labs(
+#     x = "Date",
+#     y = "Cases (per 100,000 persons)"
+#   )
 ```
 
 *Tricks*:
