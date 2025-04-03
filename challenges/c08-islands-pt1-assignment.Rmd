@@ -1,7 +1,7 @@
 ---
 title: "The Islands, Part 1: Design"
-author: "(Your name here)"
-date: 202X-XX-XX
+author: "Khor Zhi Hong"
+date: 2025-04-01
 output:
   github_document:
     toc: true
@@ -66,15 +66,17 @@ NB. When Zach counted the homes (on 2025-01-08), he found 20 unoccupied out of 5
 **Observations**:
 
 - What is the total number of homes in Helvig?
-  - (Your response here)
+  - 551
 - What is the number of unoccupied homes? (*Hint*: This is not given anywhere. You will have to count them!)
-  - (Your response here)
+  - 18
 - What percent of homes are *occupied*?
-  - (Your response here)
+  -((551−18)/551)×100%=96.733%
 - Are there any sources of *real* uncertainty in the percent occupied you calculated?
-  - (Your response here)
+  - Yes. The occupancy status of homes could change over time depending on when the data was collected as the occupant may leave or join and also the time needed to update the status. Since it is based on the simulation, it will depend on the code update
+  
+  
 - Are there any sources of *erroneous* uncertainty in the percent occupied you calculated?
-  - (Your response here)
+  - Yes. Since i counted there might be human error 
 
 Zach looked at the first 25 homes in Helvig and recorded the `age` and `name` of every person in those homes. These people are provided in `helvig-seq.csv`.
 
@@ -98,7 +100,10 @@ Make sure to include in `df_q3` the counts as a column named `n`, and the preval
 ## TASK: Compute the prevalence and sort
 df_q3 <- 
   df_sample_seq %>% 
-## TODO: Complete this code
+  mutate(last_name = word(name, -1)) %>%   
+  count(last_name, name = "n") %>%      
+  mutate(p = n / sum(n)) %>%          
+  arrange(desc(p))    
 
 df_q3
 ```
@@ -121,9 +126,10 @@ print("Very good!")
 *Observations*
 
 - What last name is most prevalent in `df_sample_seq`?
-  - (Your response here)
+  - Sorensen, appearing for 8 times and have a prevalence of 0.12698413.
 - Is this sample representative of *all* houses in Helvig? Why or why not?
-  - (Your response here)
+  - Not necessarily.
+This sample only includes people from the first 25 homesand is a sequential sample. there maybe a case of the neighborhoods being socially clustered like a tradition of relative living close, there maybe a over-sample of the cluster that happens to be relatives. A better representative sample would be randomly selected homes across Helvig and larger sample size.
 
 In the exercises, we talked about the importance of random sampling. In the previous challenge, we were able to *simulate* a random sample by running a few lines of code. But in the real world, we have to work harder to gather a random sample. We'll do this in two stages: *plan* then *collect*.
 
@@ -135,8 +141,8 @@ Complete the code below to draw a sample of size `n=25`. Replace `n_houses` with
 ## TASK: Set the parameters for this code block
 
 ## Select a random sample of houses
-# n_houses <- ??? # Total number of houses
-# n_sample <- ???  # Desired sample size
+n_houses <- 551
+n_sample <- 25
 
 set.seed(101)   # Set a seed for reproducibility
 
@@ -186,7 +192,7 @@ df_sample_random <-
 
 Use the following to check your work.
 
-```{r q3-tests}
+```{r q5-tests}
 ## NOTE: No need to change this
 # Check that the dataset has the correct column names
 assertthat::assert_that(setequal(
@@ -225,8 +231,8 @@ print("Great work!")
 *Observations*
 
 - Which sample---sequential or random---is more *representative* of all homes Helvig? Why?
-  - (Sequential or random?)
-  - (Write your 'why' here.)
+  - random
+  - A random sample randomly select the houses with equal chance, which helps avoid bias. The sequential sample may over-sample certain relatives or families who live near each other. These areas might not reflect the overall of the entire island. Random sampling reduces this risk and generalize it, thus more representative of all homes Helvig
 
 ### __q6__ Find common names: Random sample
 
@@ -239,14 +245,15 @@ df_sample_random %>%
   count(last) %>% 
   arrange(desc(n)) %>% 
   mutate(p = n / sum(n))
+
 ```
 
 *Observations*
 
 - Did you find any highly prevalent names using `df_sample_random` that you *didn't* find in q3 (using `df_sample_seq`)? Write them here.
-  - (Your response here)
+  - Collins,Blomgren,Regan,Jensen
 - Is there any reason that people with the same last name might tend to *live near each other*?
-  - (Your response here)
+  - there might be a tradition of staying close to family in this island, the relative may want to live close for tightness, family may want to take care of each other
 
 You should have found some difference between the sequential and random samples. This is because we're only working with a *sample*---a limited number of observations from the entire population. We could go to every single house in Helvig and determine *exactly* how many people of each name there are (that's called a *census*), but the point of statistical inference is that we can make statements about a population using only a sample. What makes statistical inference powerful is that we can determine *how confident* we should be in our results, based on the size of our sample.
 
@@ -262,10 +269,14 @@ Complete the code below to write a helper function. Your function will compute t
 #  proportion of individuals with the user-specified `last` name (returned
 #  in an `estimate` column).
 name_prevalence <- function(df, last = "Collins") {
-  df %>% 
+  df %>%
     ## TODO: Finish this code
+    filter(!is.na(name)) %>%                     
+    mutate(last_name = word(name, -1)) %>%       
+    summarise(estimate = mean(last_name == last))%>%
     mutate(term = "prevalence")
 }
+
 ```
 
 Use the following code to check your results.
@@ -326,6 +337,8 @@ df_interval_bootstrap <-
       function(split_df) {
 ## TODO: Finish this code, using the name_prevalence() helper you implemented
 ## HINT: Remember that you need to use analysis() when operating on split_df
+      analysis(split_df) %>% 
+      name_prevalence(last = "Collins") 
       }
     )
   ) %>% 
@@ -339,10 +352,10 @@ df_interval_bootstrap
 **Observations**:
 
 - What is highest possible prevalence for your chosen name, based on the confidence interval you constructed?
-  - (Your response here)
+  - 0.1896552	
 - Note that we used the *random* sample with the bootstrap procedure in this task. Could we use the bootstrap to make a confidence interval using the sequential sample (`df_sample_seq`) that would be representative of all of Helvig? Why or why not?
-  - (Yes or no.)
-  - (Write your 'why' here.)
+  - No
+  - as sample_seq is not randomly selected and only select the first 25 home which maybe biased, over-sample some families and not a good representative of helvig. Bootstrap assume sample used is representative of the general population, thus using sample_seq may give misleading confidence interval.
 
 ### __q9__ Discover possible measurements
 
@@ -350,9 +363,9 @@ Click on a single islander (you can do this from one of the houses), and take a 
 
 *Hint*: The videos from the [Visitor Center](https://islands.smp.uq.edu.au/visitors.php) will be especially helpful for getting some ideas.
 
-- (Possible measurement #1)
-- (Possible measurement #2)
-- (Possible measurement #3)
+- Number of children in household in the island
+- Number of married people in the island
+- number of houses with 3 or more people living in the house 
 
 ### __q10__ Planning a study (TEAMWORK)
 
@@ -362,34 +375,63 @@ Challenge 10 will be a team assignment where you plan and execute a statistical 
 
 - (What population are you going to study?)
   - All of the Islanders? Only the residents of Helvig? Participants meeting certain criteria (in which case, you need to list *covariates*)?
+  We are going to study the islanders from the topmost island in the following cities:
+  Hofn
+  Vardo
+  Helvig
+  Bjurholm
+  Blondous
+  Helluland
 
 #### Quantity of interest
 
-- (Write your quantity of interest here)
+- Number of children in household
 
 #### Covariates
 
 - (Write any relevant covariates here)
-- (There's probably more than one!)
+- Net worth
+-Socioeconomic factors
+-Occupation
+-Location (town)
+-Island (cultural ideas<- to reduce this, we only study one island)
+
 
 #### Observation or experiment?
 
 The Islands allows you to ask islanders to complete tasks. If you just take measurements on your participants, then it's an *observational study*. But if you also introduce something that's meant to change the outcome of a measurement (e.g., drinking coffee before taking a test), that's called an *experimental study*. You need to decide whether your study is observational or experimental.
 
-- (Observation or experiment?)
+- We will be doing an observational study
 
 #### Question / Hypothesis
 
 - (Write your question / hypothesis here)
-  - This could be an observational question, like "How are X and Y related in the population?"
-  - This could be an experimental question, like "What effect does X have on Y in the population?"
+-How does familial net worth influence the number of children in a household?
 
 #### Sampling plan
 
 - (What steps will you take to collect the data?)
   - Be specific. For instance, if you're going to collect a random sample, how will you enumerate all of the things to be sampled?
-  - Write a protocol. Document step-by-step instructions that your team will follow. That way, you can feasibly split up data collection among the whole team, while making sure each team member doesn't make ad hoc decisions that introduce bias into your results.
+To start, we will be taking a random sample of 20 households from each city on the topmost island
+-Each person will take one city (one person will take two)
+-By taking a random sample, we are ensuring that the data is representative of the chosen population
+-Following the same protocol as used in challenge eight to generate the sample
+
+ 
+  - Write a protocol. Document step-by-step instructions that your team will follow. That way, you can feasibly split up data collection among the From each parent in each household, we will collect. For straight couples parent a will be the woman and parent b will be the man, otherwise it doesn’t matter. For one parent households, parent a will be the parent and enter NA for parent B:
+-Name
+-Occupation
+-Age
+-Net Worth
+-Number of Children
+
+  whole team, while making sure each team member doesn't make ad hoc decisions that introduce bias into your results.
 - (How will you ensure the data is representative of your chosen population?)
+We will pull data from random form each city, 20 samples size
+
 - (For experiments only: How will you ensure any effects you observe are due to the treatment, and not due to other factors?)
+We are pulling data on multiple factors not directly related to net worth but potentially confounding variables such as occupation, age, and location of the household all of which will help search for a mistaken correlation/causation.    
+
 - (How will you choose your sample size?)
   - This should be a mix of how confident you want to be in your results, and what is actually *feasible* for your research team.
+We chose our sample size based on the number of cities and the number of households that it’s reasonable for each person to collect data on. 20 households times 6 cities creates a total sample size of 120 households. 
