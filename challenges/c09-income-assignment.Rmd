@@ -1,7 +1,7 @@
 ---
 title: "US Income"
-author: "(Your name here)"
-date: 202X-XX-XX
+author: "Khor Zhi Hong"
+date: 2025-4-6
 output:
   github_document:
     toc: true
@@ -50,7 +50,7 @@ library(tidyverse)
 
 ```{r q1-task}
 ## TODO: Give the filename for your copy of Table B01003
-filename_pop <- NA_character_
+filename_pop <- "./data/ACSDT5Y2018.B01003-Data.csv"
 
 ## NOTE: No need to edit
 df_pop <-
@@ -80,7 +80,7 @@ This means that for cases listed as `*****` the US Census Bureau recommends trea
 
 ```{r q2-task}
 ## TODO: Give the filename for your copy of Table S1903
-filename_income <- NA_character_
+filename_income <- "./data/ACSST5Y2018.S1903-Data.csv"
 
 ## NOTE: No need to edit
 df_income <-
@@ -110,6 +110,8 @@ This dataset is in desperate need of some *tidying*. To simplify the task, we'll
 *Hint*: You can do this in a single pivot using the `".value"` argument and a `names_pattern` using capture groups `"()"`. Remember that you can use an OR operator `|` in a regex to allow for multiple possibilities in a capture group, for example `"(Estimate|Margin of Error)"`.
 
 ```{r q3-task}
+
+
 df_q3 <-
   df_income %>%
   select(
@@ -120,8 +122,24 @@ df_q3 <-
     contains("median") & matches("\\d-person families") & !contains("Annotation of")
   ) %>%
   mutate(across(contains("median"), as.numeric)) %>%
-## TODO: Pivot the data, rename the columns
+# TODO: Pivot the data, rename the columns
+  pivot_longer(
+    cols = -c(Geography, `Geographic Area Name`),
+    names_to = c(".value", "category"),
+    names_pattern = "^(Estimate|Margin of Error)!!Median income \\(dollars\\)(?: MOE)?!!FAMILY INCOME BY FAMILY SIZE!!(.+)$"
+  ) %>%
+  rename(
+    geographic_area_name = `Geographic Area Name`,
+    income_estimate = Estimate,
+    income_moe = `Margin of Error`
+  ) %>%
   glimpse()
+
+
+
+
+
+
 ```
 
 Use the following tests to check your work:
@@ -152,7 +170,16 @@ $$\text{MOE} = 1.645 \times \text{SE}.$$
 
 ```{r q4-task}
 
-df_q4
+df_q4 <- df_q3 %>%
+  mutate(
+    income_SE = income_moe / 1.645,
+    #for 99% 2.576 
+    income_lo = income_estimate - 2.576*income_SE,
+    income_hi = income_estimate + 2.576*income_SE,
+    income_CV = income_SE / income_estimate
+  )
+
+
 ```
 
 Use the following tests to check your work:
@@ -208,7 +235,16 @@ One last wrangling step: We need to join the two datasets so we can compare popu
 ```{r q5-task}
 ## TODO: Join df_q4 and df_pop by the appropriate column
 
-df_data
+# df_data <- df_q4 %>%
+#   left_join(df_pop, by = "Geography")
+# names(df_pop)
+df_data <- df_q4 %>%
+  left_join(
+    df_pop %>%
+      select(Geography, population = population_estimate),
+    by = "Geography"
+  )
+
 ```
 
 # Analysis
@@ -246,13 +282,17 @@ df_data %>%
 **Observations**:
 
 - Document your observations here.
-  - (Your response here)
-  - (Your response here)
-  - ...
+  - Overall range: Median household incomes vary considerably across counties and family sizes, from roughly 
+50,000 up to over 200,000.
+  - Many of the confidence intervals for different family sizes within the same county overlap
+  - some countries have noticeable wider confidence intervals(eg. dukes, Nantucket) showing lesser certainty which maybe due to smaller sample size
+  -some countries have noticeable shorter confidence intervals(eg. suffolk, hampden,middlesex..) showing higher certainty and better estimate
+  
 - Can you confidently distinguish between household incomes in Suffolk county? Why or why not?
-  - (Your response here)
+  - It is rather difficult to confidently distinguish the median incomes for different family sizes in Suffolk county, as their confidence intervals overlap and their true median incomes maybe be quite close thus it is quite difficult to confidently distinguish them despite their rather narrow confidence intervals which suggest higher precision in estimation. but just from the graph can roughly estimate 6>5>4>3>2.
+  
 - Which counties have the widest confidence intervals?
-  - (Your response here)
+  - Nantucket
 
 In the next task you'll investigate the relationship between population and uncertainty.
 
@@ -261,14 +301,28 @@ In the next task you'll investigate the relationship between population and unce
 *Hint*: Remember that standard error is a function of *both* variability (e.g. variance) and sample size.
 
 ```{r q7-task}
+
+ggplot(df_data, aes(x = population, y = income_SE, color = category)) +
+  geom_point(alpha = 0.7, size = 2) +
+  labs(
+    title = "Standard Error vs. Population",
+    x = "Population",
+    y = "Standard Error",
+    color = "Family Size"
+  ) +
+  theme_minimal()
+
+
 ```
 
 **Observations**:
 
 - What *overall* trend do you see between `SE` and population? Why might this trend exist?
-  - (Your response here)
+  - As the population increases the standard error decreases.Larger populations generally provide more data and sample size, which reduces uncertainty in the estimate.Furthermore the standard error is inversely related to sample size.
+  
 - What does this *overall* trend tell you about the relative ease of studying small vs large counties?
-  - (Your response here)
+  - Larger counties yield more precise estimates and lower Se, making conclusions and observation more reliable.
+  -it increases the difficulty in studies that involve small counties, as the estimate may tend to have higher standard error and less precise which may result in the conclusion being less reliable or comparison made can be erroneous due to the sampling noise
 
 # Going Further
 <!-- ----------------------------------------------------------------------- -->
@@ -279,11 +333,57 @@ Now it's your turn! You have income data for every county in the United States: 
 
 ```{r q8-task}
 ## TODO: Pose and answer your own question about the data
+
+
+df_q8 <- 
+  df_income %>%
+  select(
+    Geography,
+    contains("Geographic"),
+    # This will select only the numeric d-person family columns;
+    # it will ignore the annotation columns
+    contains("median") & matches("FAMILIES!!Families!!(Married-couple families|Female householder, no husband present)$") & !contains("Annotation of")
+  ) %>%
+  mutate(across(contains("median"), as.numeric)) %>%
+  pivot_longer(
+    cols = -c(Geography,`Geographic Area Name`),
+    names_to = c(".value", "category"),
+    names_pattern = "^(Estimate|Margin of Error)!!Median income \\(dollars\\)(?: MOE)?!!FAMILIES!!Families!!(.+)$"
+  ) %>%
+  rename(
+    geographic_area_name =`Geographic Area Name`,
+    income_estimate =Estimate,
+    income_moe =`Margin of Error`
+  )%>%
+  glimpse()
+
+ggplot(df_q8, aes(x = category, y = income_estimate, fill = category)) +
+  geom_boxplot() +
+  labs(
+    title = "Median Income by Family Structure",
+    x = "Family Type",
+    y = "Median Household Income"
+  ) +
+  scale_y_continuous(labels = scales::dollar) +
+  theme_minimal()
+
+df_q8 %>%
+  group_by(category) %>%
+  summarise(
+    median_income = median(income_estimate, na.rm = TRUE)
+  )
+
+
 ```
 
 **Observations**:
 
 - Document your observations here
+
+-Married-couple families have significantly higher median incomes than female householder, no husband present families. The IQR's median is much higher for married-couple families,around 71455 while no husband present is 30276. this maybe due to the married-couple have income coming from two breadwinner while female householder, no husband present may have higher chance of sole breadwinner. There may be other reasons such as income gender gap or constraints regarding employment due to caring children as sole parent. 
+
+There is more variability in income for married-couple families, which may be because their income can come from two breadwinners, whereas female householder, no husband present have higher chance of sole income. married-couple families may have lesser constraints when it comes to employment and have wider opportunities of jobs which may induce more variability 
+
 
 Ideas:
 
