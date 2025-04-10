@@ -1,0 +1,57 @@
+HouseID,HouseSize,Name,NetWorth,Occupation,Age,NumChildren
+322,Small,Anita Kuhn,632,Coachman,25,4
+322,Small,Auna Hall,625,Book Club,24,4
+322,Small,Daiki Hall,,Student,6,0
+322,Small,Nicole Hall,,,4,0
+322,Small,Megan Hall,,,4,0
+322,Small,Kristof Kuhn,,,2,0
+267,Small,Rajani Mehta,1730,,41,4
+267,Small,Thurston Sorensen,1755,Cleaner,40,3
+267,Small,Karishma Mehta,1086,Cleaner,19,0
+267,Small,Husaam Mehta,,Student,15,0
+167,Small,Erik Carlsen,8127,Carpenter,37,1
+167,Small,Jessica Price,7752,Fisherman,34,2
+167,Small,Francesca Price,,Student,16,0
+167,Small,Daniel Carlsen,,Student,14,0
+429,Small,Laura Eklund,9895,Dancer,49,5
+429,Small,Matthew Brown,9960,Dentist,49,6
+148,Small,Dr Matthew Edwards,9066,Barista,54,3
+148,Small,Miriam Kunz,9126,Detective,53,2
+285,Small,Michelle Moore,5199,Lumberjack,52,3
+285,Small,Soren Madsen,5175,Ornithological Society,52,3
+140,Small,Lea Sorensen,4426,Midwife,46,2
+140,Small,Halden Solberg,4399,,45,7
+407,Small,Daniel Solberg,3805,Oat Farmer,23,1
+112,Small,Hannah Morris,807,,24,3
+112,Small,Juhani Solberg,835,Sailor,23,3
+112,Small,Jessica Morris,,,4,0
+112,Small,Kaito Morris,,,4,0
+112,Small,Marcel Solberg,,,3,0
+31,Small,Yuval Ahmad,8048,Accountant,55,3
+31,Small,Kirsten Wolff,8060,Elementary School Teacher,50,3
+275,Small,Jessica Wilson,3233,Occupational Therapist,42,7
+275,Small,Luke Regan,3244,Brewer,41,5
+275,Small,Bridey Regan,,Student,17,0
+275,Small,Kaito Wilson,92,Student,16,0
+275,Small,Zoe Wilson,,Student,15,0
+275,Small,Nathan Wilson,,Student,14,0
+215,Small,Arya Abbasi,4307,Baker,36,2
+215,Small,Chanda Abbasi,,Student,15,0
+215,Small,Madan Abbasi,,Student,13,0
+263,Small,Erla Sorensen,4426,Cooper,22,0
+248,Small,Tyra Sorensen,6069,Bricklayer,46,3
+248,Small,Maximilian Blomgren,6036,,45,2
+427,Small,Felix Solberg,1416,Oat Farmer,22,3
+427,Small,Illona Solberg,451,,3,0
+427,Small,David Solberg,449,1 year old,,0
+427,Small,Nils Solberg,449,,0,0
+15,Small,Bhajan Babu,7898,Nurse,51,3
+15,Small,Olivia Sato,7890,Waiter,49,2
+362,Small,Galen Eklund,5015,Plasterer,46,2
+362,Small,Tomas Solberg,5025,Brewer,45,3
+63,Small,Henrik Eklund,8873,Bricklayer,43,1
+63,Small,Helsa Bager,8896,Midwife,41,2
+63,Small,Astrid Eklund,,Student,15,0
+405,Small,Erik Blomgren,5381,,61,2
+405,Small,Friederike Bergmann,5348,Cycling Club,60,2
+218,Small,Gen Connolly,4652,Oat Farmer,39,0

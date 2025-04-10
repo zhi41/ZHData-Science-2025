@@ -1,0 +1,47 @@
+HouseID,HouseSize,Name,NetWorth,Occupation,Age,NumChildren
+149,Small,Gala Sorensen,6353,,63,2
+172,Small,Chelsea Morris,4414,Elementary School Teacher,31,1
+172,Small,Eva Morris,,Student,10,0
+260,Small,Larisa Chatterjee,1415,Waiter,45,2
+260,Small,Vasudha Chatterjee,,,18,0
+260,Small,Neysa Chatterjee,,Student,13,0
+407,Small,Daniel Solberg,3805,Oat Farmer,23,1
+388,Small,Alice Collins,4078,Hunter,34,1
+388,Small,Andreas Froehlich,4052,,33,1
+388,Small,Armand Collins,,Student,8,0
+54,Small,Sonja Jensen,2865,Ornithological Society,48,5
+54,Small,Dariusz Kruse,2909,Journalist,47,4
+54,Small,Erika Jensen,,Student,15,0
+53,Small,Megan Connolly,2444,Hiking Club,36,4
+53,Small,Magnar Sorensen,2486,Sculptor,35,2
+53,Small,Michelle Connolly,14,Student,17,0
+53,Small,Gala Sorensen,,Student,15,0
+53,Small,Arvid Sorensen,,Student,14,0
+145,Small,Jody Hughes,4787,Oat Farmer,39,6
+145,Small,Elvira Zimmer,343,Student,17,0
+145,Small,Joan Hughes,775,Student,16,0
+145,Small,Ralf Zimmer,408,Student,14,0
+602,Small,Felix Maury,2705,Pet Groomer,25,1
+141,Small,Heidi Reuter,7300,,60,3
+141,Small,Volker Schuster,7265,,59,3
+291,Small,Sebastian Carlsen,1245,Brewer,32,3
+291,Small,Miyu Petersen,1219,,30,3
+291,Small,Anthony Petersen,,Student,12,0
+291,Small,Signe Carlsen,,Student,8,0
+696,Small,Kaya Sorensen,3728,,34,2
+696,Small,Dr Erik Solberg,3829,Doctor,33,2
+696,Small,Agda Solberg,,Student,14,0
+696,Small,Torvald Solberg,,Student,13,0
+664,Small,Ansel Pallesen,3018,Butcher,23,0
+148,Small,Dr Matthew Edwards,9066,Barista,54,3
+148,Small,Miriam Kunz,9126,Detective,53,2
+284,Small,Hallmar Madsen,698,Pet Groomer,21,0
+284,Small,Mia Sorensen,685,,20,1
+284,Small,Ella Blomgren,,,2,0
+597,Small,Kana Wilson,1284,,23,0
+597,Small,Lindsay Mitchell,1313,Poultry Farmer,22,0
+678,Small,Kristine Schindler,583,,20,0
+599,Small,Inga Maurer,4036,Turner,22,0
+391,Small,Anastasia Ibsen,490,Running Club,19,1
+391,Small,Simon Thorn,,,0,0
+383,Small,Mathias Ruiz,2013,Shearer,19,2

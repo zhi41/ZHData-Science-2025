@@ -1,0 +1,63 @@
+HouseID,HouseSize,Name,NetWorth,Occupation,Age,NumChildren
+65,Small,Rene Sato,2506,Carpenter,40,4
+65,Small,Kaya Jensen,2485,,40,3
+65,Small,Mathis Sato,793,Garbage Collector,18,0
+11,Small,Gemma Wilson,2844,Elementary School Teacher,43,2
+11,Small,Lukas Thorn,2825,,42,2
+255,Small,Lidia Brandt,7533,Cycling Club,54,1
+255,Small,Devak Gadhavi,7593,Dentist,53,1
+410,Small,Katja Lutz,3926,Cleaner,53,2
+410,Small,Dr Sean Morris,3906,Hiking Club,50,2
+314,Small,Lynnea Ibsen,7372,Massage Therapist,41,2
+314,Small,Noah Sato,,Student,14,0
+321,Small,Jun Sato,4298,,42,6
+321,Small,Britt Eklund,4303,Oat Farmer,40,4
+321,Small,Allana Sato,1183,Oat Farmer,19,0
+379,Small,Nikola Hansen,7986,Detective,53,0
+379,Small,Kristine Hansen,7953,,53,2
+46,Small,Miki Jackson,3354,Fisherman,33,3
+46,Small,Hiro Michel,3333,,31,2
+46,Small,Taylor Jackson,,Student,13,0
+46,Small,Tatsuya Jackson,,Student,11,0
+46,Small,Tyler Jackson,,Student,9,0
+393,Small,Beau Kimura,646,,44,7
+393,Small,Inge Sorensen,667,High School Teacher,42,7
+393,Small,Jeneve Sorensen,,,18,0
+393,Small,Caprice Kimura,,Student,16,0
+393,Small,Noah Kimura,,Student,15,0
+393,Small,Claire Kimura,,Student,14,0
+393,Small,Elias Sorensen,,Student,13,0
+24,Small,Paul Jensen,421,,21,3
+24,Small,Jessica Collins,412,University student,21,2
+24,Small,Asuka Collins,,,3,0
+24,Small,Erling Jensen,,1 year old,,0
+145,Small,Jody Hughes,4787,Oat Farmer,39,6
+145,Small,Elvira Zimmer,343,Student,17,0
+145,Small,Joan Hughes,775,Student,16,0
+145,Small,Ralf Zimmer,408,Student,14,0
+303,Small,Saeed Sultana,5134,Constable,54,2
+303,Small,Nadia Sultana,5132,Waiter,53,2
+423,Small,Michael Morris,3289,High School Teacher,32,3
+423,Small,Melodie Hardy,3259,,32,2
+423,Small,Claire Hardy,,Student,11,0
+423,Small,Charlotte Hardy,,Student,9,0
+298,Small,Etienne McCarthy,911,Constable,22,1
+298,Small,Lila Wilson,887,,22,2
+298,Small,Mathis Dayal,,,2,0
+298,Small,Harvey McCarthy,,1 year old,,0
+228,Small,Bimala Chunduri,870,Butcher,19,1
+228,Small,Ravi Chunduri,,,0,0
+235,Small,Shunpei Kondo,2213,Poultry Farmer,50,3
+235,Small,Elena Bager,2196,,50,4
+283,Small,Omala Bahadur,1302,,45,5
+283,Small,Thurston Blomgren,1338,Pig Farmer,42,5
+283,Small,Maximilian Blomgren,1213,Undertaker,18,0
+105,Small,Rohan Laha,3506,Constable,48,2
+105,Small,Reina Connolly,3480,,43,2
+105,Small,Mitchell Connolly,1928,Painter,20,3
+390,Small,Sophia Solberg,1496,,23,2
+390,Small,Raphael Solberg,1511,Waiter,22,3
+390,Small,Emma Solberg,,,4,0
+390,Small,Viggo Solberg,,,3,0
+240,Small,Dahl Solberg,4337,Plumber,44,3
+240,Small,Fabian Solberg,1370,Student,16,0

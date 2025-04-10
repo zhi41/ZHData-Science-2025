@@ -1,0 +1,93 @@
+---
+title: "challenge10 try"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+
+setwd("C:/Users/zkhor/Desktop/ZHData-Science-2025/exercises_sequenced/try")
+
+csv_files <- list.files(pattern = "\\.csv$")
+print(csv_files)  
+
+
+read_with_island <- function(file) {
+  df <- read.csv(file, stringsAsFactors = FALSE)  
+  island_name <- sub("\\.csv$", "", file)
+  df$Island <- island_name
+  return(df)
+}
+
+
+df_list <- lapply(csv_files, read_with_island)
+combined_df <- bind_rows(df_list)
+
+
+combined_df
+```
+
+
+```{r}
+
+combined_df$HouseSize <- as.factor(combined_df$HouseSize)
+combined_df$NumChildren <- as.numeric(combined_df$NumChildren)
+combined_df$NetWorth <- as.numeric(combined_df$NetWorth)
+
+summary(combined_df)
+
+ggplot(combined_df, aes(x = NumChildren, y = NetWorth)) +
+  geom_point(alpha = 0.7, color = "blue") +
+  facet_wrap(~ Island) +
+  labs(title = "Net Worth vs. Number of Children by Island",
+       x = "Number of Children",
+       y = "Net Worth") +
+  theme_minimal()
+```
+
+
+```{r}
+ggplot(combined_df, aes(x = HouseSize, y = NetWorth)) +
+  geom_boxplot() +
+  facet_wrap(~ Island) +
+  labs(title = "Net Worth Distribution by Household Size and Island",
+       x = "House Size",
+       y = "Net Worth") +
+  theme_minimal()
+
+
+combined_df %>%
+  group_by(Island, HouseSize) %>%
+  summarise(
+    AvgNetWorth = mean(NetWorth, na.rm = TRUE),
+    AvgChildren = mean(NumChildren, na.rm = TRUE),
+    Count = n()
+  ) %>%
+  ungroup() %>%
+  print()
+```
+
+
+```{r}
+
+ggplot(combined_df, aes(x = NumChildren, y = NetWorth)) +
+  geom_point(alpha = 0.7, color = "steelblue") +
+  labs(title = "Net Worth vs. Number of Children (Combined)",
+       x = "Number of Children",
+       y = "Net Worth") +
+  theme_minimal()
+
+ggplot(combined_df, aes(x = factor(NumChildren), y = NetWorth)) +
+  geom_boxplot() +
+  labs(title = "Net Worth Distribution by Number of Children",
+       x = "Number of Children",
+       y = "Net Worth") +  theme_minimal()
+
+
+```
+

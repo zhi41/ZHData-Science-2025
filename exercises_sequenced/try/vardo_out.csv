@@ -1,0 +1,58 @@
+HouseID,HouseSize,Name,NetWorth,Occupation,Age,NumChildren
+175,Small,Uwe Richter,5234,Barista,54,4
+175,Small,Elena Mayer,5294,Midwife,54,2
+289,Small,Robin Edwards,2046,,46,0
+289,Small,Sophia Sorensen,2047,Barista,36,2
+289,Small,Mia Sorensen,44,Student,16,0
+289,Small,Florian Sorensen,,Student,13,0
+501,Small,Leira Sorensen,1449,,23,2
+501,Small,Brayden Wilson,1434,Confectioner,23,2
+501,Small,Britt Sorensen,,,3,0
+501,Small,Daichi Wilson,,1 year old,,0
+105,Small,Rohan Laha,3506,Constable,48,2
+105,Small,Reina Connolly,3480,,43,2
+105,Small,Mitchell Connolly,1928,Painter,20,3
+634,Small,Hans Jensen,1351,Poultry Farmer,20,2
+11,Small,Gemma Wilson,2844,Elementary School Teacher,43,2
+11,Small,Lukas Thorn,2825,,42,2
+260,Small,Larisa Chatterjee,1415,Waiter,45,2
+260,Small,Vasudha Chatterjee,,,18,0
+260,Small,Neysa Chatterjee,,Student,13,0
+533,Small,Olina Sorensen,22044,Doctor,52,3
+162,Small,Halden Sorensen,286,,18,0
+341,Small,Takuya Collins,1957,Gardener,21,1
+373,Small,Anika Sorensen,8967,Bureaucrat,51,4
+373,Small,Florian Ibsen,9009,Judge,50,3
+373,Small,Julia Sorensen,792,,18,1
+373,Small,Tilmann Wolff,,,0,0
+463,Small,Agda Byquist,1836,,20,3
+463,Small,Robert Connolly,,,3,0
+463,Small,Harold Byquist,,,3,0
+463,Small,Shannon Connolly,,1 year old,,0
+287,Small,Emma Yamada,4018,,31,3
+287,Small,Felix Thorn,4070,Fisherman,30,3
+287,Small,Sakura Yamada,,Student,11,0
+287,Small,Riko Yamada,,Student,10,0
+287,Small,Ethan Yamada,,Student,7,0
+279,Small,Brenda Sorensen,2706,,44,2
+279,Small,Bertold Franke,2737,Lumberjack,43,2
+395,Small,Ayann Patel,769,,23,3
+395,Small,Bailey Kimura,774,Baker,22,3
+395,Small,Arthur Kimura,,,3,0
+395,Small,Mark Kimura,,,2,0
+395,Small,Damini Patel,,,0,0
+566,Small,Gunnar Reinhardt,3201,,39,0
+566,Small,Riko Connolly,3126,Dairy Farmer,39,0
+446,Small,Dr Jasmin Ibsen,7088,Architect,57,2
+446,Small,Alain Marin,7051,,57,2
+266,Small,Rida Blomgren,1114,Tailor,22,1
+266,Small,Jakob Bager,892,,19,0
+266,Small,Gaston Blomgren,,,2,0
+191,Small,Keerthana Kaur,665,,26,4
+191,Small,Maximilian Blomgren,697,Brewer,25,4
+191,Small,Sonja Blomgren,,Student,7,0
+191,Small,Nina Blomgren,,,4,0
+191,Small,Radhak Kaur,,,2,0
+191,Small,Erika Blomgren,,,0,0
+530,Small,Zoe Connolly,1026,,21,0
+530,Small,Ava Wilson,1048,Brewer,21,0

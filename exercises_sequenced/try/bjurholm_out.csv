@@ -1,0 +1,47 @@
+HouseID,HouseSize,Name,NetWorth,Occupation,Age,NumChildren
+66,Small,Halden Sorensen,969,Constable,43,6
+66,Small,Hannah Byquist,938,,40,6
+66,Small,Hans Byquist,771,Student,17,0
+66,Small,Hakan Byquist,,Student,16,0
+66,Small,Lukas Byquist,247,Student,14,0
+257,Small,Lomash Bose,5634,Cleaner,42,0
+290,Small,Vanessa Sorensen,5414,Nurse,49,2
+290,Small,Jackson Moore,5387,,48,2
+213,Small,Jean Gregoire,2218,Butcher,39,3
+213,Small,Veronika Horn,2181,,36,3
+213,Small,Peter Horn,1441,Undertaker,18,0
+213,Small,Joaquim Gregoire,166,Florist,16,0
+213,Small,Anita Horn,,Student,15,0
+54,Small,Sonja Jensen,2865,Ornithological Society,48,5
+54,Small,Dariusz Kruse,2909,Journalist,47,4
+54,Small,Erika Jensen,,Student,15,0
+149,Small,Gala Sorensen,6353,,63,2
+387,Small,Gunnar Solberg,2215,,42,2
+387,Small,Corinne Simon,2198,,40,2
+387,Small,Justin Simon,174,,18,0
+356,Small,Sacha Carlsen,225,,90,1
+68,Small,Ole Solberg,1603,Tailor,21,0
+68,Small,Emma Carlsen,1568,,20,0
+71,Small,Chanda Basu,3313,Ornithological Society,45,0
+310,Small,Tove Solberg,6840,,62,1
+310,Small,Rosalind Lund,6837,Barista,52,0
+2,Small,Kristina Eklund,301,,22,0
+425,Small,Daniel Sorensen,2352,Pig Farmer,20,0
+407,Small,Daniel Solberg,3805,Oat Farmer,23,1
+11,Small,Gemma Wilson,2844,Elementary School Teacher,43,2
+11,Small,Lukas Thorn,2825,,42,2
+82,Small,Archibald Mitchell,709,Book Club,24,2
+82,Small,Kirstie Blomgren,724,Baker,24,1
+82,Small,Derrick Mitchell,,,4,0
+272,Small,Signe Sorensen,2691,Speleological Society,38,2
+272,Small,Gen Collins,2709,Barista,37,1
+272,Small,Emma Sorensen,275,,18,0
+272,Small,Elias Sorensen,,Student,16,0
+229,Small,Robert Yamada,2971,Running Club,27,1
+229,Small,Laura Ibsen,2911,Carpenter,27,1
+229,Small,Elin Ibsen,,Student,7,0
+415,Small,Nicole Walther,504,,89,1
+118,Small,Michel Huet,7376,Kitchen Hand,34,3
+118,Small,Maria Brandt,7419,Lawyer,34,2
+118,Small,Stephan Huet,,Student,14,0
+118,Small,Rodrigue Huet,,Student,12,0

@@ -1,0 +1,56 @@
+HouseID,HouseSize,Name,NetWorth,Occupation,Age,NumChildren
+337,Small,Omi Yamamoto,8547,Dentist,37,2
+337,Small,Juhani Lund,8509,,37,2
+337,Small,Tadao Yamamoto,2067,Poultry Farmer,18,0
+337,Small,Hayato Yamamoto,34,Student,17,0
+53,Small,Megan Connolly,2444,Hiking Club,36,4
+53,Small,Magnar Sorensen,2486,Sculptor,35,2
+53,Small,Michelle Connolly,14,Student,17,0
+53,Small,Gala Sorensen,,Student,15,0
+53,Small,Arvid Sorensen,,Student,14,0
+36,Small,Harri Bergmann,9594,Author,52,1
+36,Small,Carmen Maier,9590,Sawyer,51,2
+227,Small,Tyr Sorensen,4596,,38,4
+227,Small,Vidya Joshi,4598,Bureaucrat,37,4
+227,Small,Ramya Joshi,,Student,17,0
+227,Small,Lynnea Sorensen,,Student,14,0
+227,Small,Sebastian Sorensen,,Student,13,0
+227,Small,Gazala Joshi,,Student,9,0
+66,Small,Halden Sorensen,969,Constable,43,6
+66,Small,Hannah Byquist,938,,40,6
+66,Small,Hans Byquist,771,Student,17,0
+66,Small,Hakan Byquist,,Student,16,0
+66,Small,Lukas Byquist,247,Student,14,0
+69,Small,Haruka Yamada,9450,Pig Farmer,48,2
+32,Small,Dahl Sorensen,3013,,32,3
+32,Small,Cameron Brown,3037,Butcher,27,2
+32,Small,Berit Sorensen,,Student,10,0
+32,Small,Harrison Brown,,Student,8,0
+32,Small,Axel Sorensen,,Student,5,0
+133,Small,Sarah Solberg,45,,18,0
+309,Small,Ren Wilson,1299,Florist,19,0
+52,Small,Lucas Morris,7942,Hairdresser,55,1
+521,Small,Evan Regan,1443,Florist,20,1
+521,Small,Hanna Blomgren,1293,,19,1
+521,Small,Akira Regan,,,0,0
+175,Small,Uwe Richter,5234,Barista,54,4
+175,Small,Elena Mayer,5294,Midwife,54,2
+209,Small,Lars Sorensen,5886,,42,3
+209,Small,Kaya Solberg,5956,Park Ranger,41,4
+417,Small,Erwin Neumann,7844,,58,4
+417,Small,Dr Anne Koch,7910,Doctor,50,1
+417,Small,Wilhelm Koch,,Student,17,0
+73,Small,Elaine Henderson,3101,Joiner,25,0
+520,Small,Mason Page,972,,36,4
+520,Small,Nanako Connolly,956,Coachman,36,4
+520,Small,Alexis Page,,Student,17,0
+520,Small,Cameron Connolly,,Student,15,0
+520,Small,Valerie Page,,Student,13,0
+110,Small,Tomas Svendsen,3095,Poultry Farmer,22,0
+251,Small,Summer Connolly,5598,,51,0
+251,Small,Kristjana Jensen,5649,Cabinetmaker,50,0
+390,Small,Sophia Solberg,1496,,23,2
+390,Small,Raphael Solberg,1511,Waiter,22,3
+390,Small,Emma Solberg,,,4,0
+390,Small,Viggo Solberg,,,3,0
+42,Small,Hallmar Eklund,3202,Musician,38,3
