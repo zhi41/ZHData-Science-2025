@@ -442,3 +442,4 @@ How does the distribution of life expectancy and GDP per capita vary across cont
   -in 2007 Life expectancy increased across all continents, with Europe and Oceania still leading, and Africa showing significant improvement but still lagging behind other continents.
   
   -Specific outliers are marked as points outside the whiskers of the box plots are Afghanistan, Haiti, Reunion, and Turkey.
+  
