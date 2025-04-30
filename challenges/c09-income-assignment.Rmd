@@ -170,15 +170,14 @@ $$\text{MOE} = 1.645 \times \text{SE}.$$
 
 ```{r q4-task}
 
-df_q4 <- df_q3 %>%
-  mutate(
-    income_SE = income_moe / 1.645,
-    #for 99% 2.576 
-    income_lo = income_estimate - 2.576*income_SE,
-    income_hi = income_estimate + 2.576*income_SE,
-    income_CV = income_SE / income_estimate
-  )
 
+df_q4 <- df_q3 %>% 
+  mutate(
+    income_SE  = income_moe / 1.645,               
+    income_lo  = income_estimate - 2.576 * income_SE, 
+    income_hi  = income_estimate + 2.576 * income_SE, 
+    income_CV  = income_SE / income_estimate          
+  )
 
 ```
 
@@ -302,23 +301,33 @@ In the next task you'll investigate the relationship between population and unce
 
 ```{r q7-task}
 
-ggplot(df_data, aes(x = population, y = income_SE, color = category)) +
+# ggplot(df_data, aes(x = population, y = income_SE, color = category)) +
+#   geom_point(alpha = 0.7, size = 2) +
+#   labs(
+#     title = "Standard Error vs. Population",
+#     x = "Population",
+#     y = "Standard Error",
+#     color = "Family Size"
+#   ) +
+#   theme_minimal()
+df_data %>% 
+  ggplot(aes(population, income_SE, color = category)) +
   geom_point(alpha = 0.7, size = 2) +
+  scale_x_log10(labels = scales::comma) +          # log scale for population
   labs(
     title = "Standard Error vs. Population",
-    x = "Population",
-    y = "Standard Error",
+    x     = "Population (log scale)",
+    y     = "Standard Error",
     color = "Family Size"
   ) +
   theme_minimal()
-
 
 ```
 
 **Observations**:
 
 - What *overall* trend do you see between `SE` and population? Why might this trend exist?
-  - As the population increases the standard error decreases.Larger populations generally provide more data and sample size, which reduces uncertainty in the estimate.Furthermore the standard error is inversely related to sample size.
+  - As the population increases the standard error decreases.This may occur as the data is taken by taking a rough constant proportion of the targeted population which may results in larger populations generally provide more data and sample size, which reduces uncertainty in the estimate.Furthermore the standard error is inversely related to sample size.
   
 - What does this *overall* trend tell you about the relative ease of studying small vs large counties?
   - Larger counties yield more precise estimates and lower Se, making conclusions and observation more reliable.
@@ -365,7 +374,8 @@ ggplot(df_q8, aes(x = category, y = income_estimate, fill = category)) +
     y = "Median Household Income"
   ) +
   scale_y_continuous(labels = scales::dollar) +
-  theme_minimal()
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
 
 df_q8 %>%
   group_by(category) %>%

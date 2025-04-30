@@ -331,13 +331,12 @@ $$\text{MOE} = 1.645 \times \text{SE}.$$
 ### **q4** Convert the margin of error to standard error. Additionally, compute a 99% confidence interval on income, and normalize the standard error to `income_CV = income_SE / income_estimate`. Provide these columns with the names `income_SE, income_lo, income_hi, income_CV`.
 
 ``` r
-df_q4 <- df_q3 %>%
+df_q4 <- df_q3 %>% 
   mutate(
-    income_SE = income_moe / 1.645,
-    #for 99% 2.576 
-    income_lo = income_estimate - 2.576*income_SE,
-    income_hi = income_estimate + 2.576*income_SE,
-    income_CV = income_SE / income_estimate
+    income_SE  = income_moe / 1.645,               
+    income_lo  = income_estimate - 2.576 * income_SE, 
+    income_hi  = income_estimate + 2.576 * income_SE, 
+    income_CV  = income_SE / income_estimate          
   )
 ```
 
@@ -507,12 +506,23 @@ and uncertainty.
 (e.g. variance) and sample size.
 
 ``` r
-ggplot(df_data, aes(x = population, y = income_SE, color = category)) +
+# ggplot(df_data, aes(x = population, y = income_SE, color = category)) +
+#   geom_point(alpha = 0.7, size = 2) +
+#   labs(
+#     title = "Standard Error vs. Population",
+#     x = "Population",
+#     y = "Standard Error",
+#     color = "Family Size"
+#   ) +
+#   theme_minimal()
+df_data %>% 
+  ggplot(aes(population, income_SE, color = category)) +
   geom_point(alpha = 0.7, size = 2) +
+  scale_x_log10(labels = scales::comma) +          # log scale for population
   labs(
     title = "Standard Error vs. Population",
-    x = "Population",
-    y = "Standard Error",
+    x     = "Population (log scale)",
+    y     = "Standard Error",
     color = "Family Size"
   ) +
   theme_minimal()
@@ -527,10 +537,12 @@ ggplot(df_data, aes(x = population, y = income_SE, color = category)) +
 
 - What *overall* trend do you see between `SE` and population? Why might
   this trend exist?
-  - As the population increases the standard error decreases.Larger
-    populations generally provide more data and sample size, which
-    reduces uncertainty in the estimate.Furthermore the standard error
-    is inversely related to sample size.
+  - As the population increases the standard error decreases.This may
+    occur as the data is taken by taking a rough constant proportion of
+    the targeted population which may results in larger populations
+    generally provide more data and sample size, which reduces
+    uncertainty in the estimate.Furthermore the standard error is
+    inversely related to sample size.
 - What does this *overall* trend tell you about the relative ease of
   studying small vs large counties?
   - Larger counties yield more precise estimates and lower Se, making
@@ -600,7 +612,8 @@ ggplot(df_q8, aes(x = category, y = income_estimate, fill = category)) +
     y = "Median Household Income"
   ) +
   scale_y_continuous(labels = scales::dollar) +
-  theme_minimal()
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
 ```
 
     ## Warning: Removed 63 rows containing non-finite outside the scale range
