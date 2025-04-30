@@ -387,7 +387,16 @@ model_metric <- tibble(
   mse = map_dbl(models, ~ mse(.x, df_validate)),
   rsq = map_dbl(models, ~ rsquare(.x, df_validate))
 )
+
+model_metric
 ```
+
+    ## # A tibble: 3 × 3
+    ##   model          mse     rsq
+    ##   <chr>        <dbl>   <dbl>
+    ## 1 baseline    0.0809 0.475  
+    ## 2 cheat       0.0537 0.637  
+    ## 3 nonphysical 0.159  0.00190
 
 **Observations**:
 
@@ -419,33 +428,44 @@ fitting. So `T_norm ~ . - x` would fit on all columns *except* `x`.
 ## TODO: Inspect the regression coefficients for the following model
 fit_q4 <- 
   df_train %>% 
-  # lm(formula = T_norm ~ . - idx - avg_q - avg_T - rms_T)
-  lm(formula = T_norm ~ L + W + U_0 + N_p + k_f + T_f)
+  lm(formula = T_norm ~ . - idx - avg_q - avg_T - rms_T)
+  # lm(formula = T_norm ~ L + W + U_0 + N_p + k_f + T_f)
   # lm(formula = T_norm ~ L - W - U_0 - N_p - k_f - T_f)
 
 
 tidy(fit_q4)
 ```
 
-    ## # A tibble: 7 × 5
-    ##   term             estimate   std.error statistic     p.value
-    ##   <chr>               <dbl>       <dbl>     <dbl>       <dbl>
-    ## 1 (Intercept)   4.88        0.834           5.86  0.000000126
-    ## 2 L             2.57        2.00            1.28  0.203      
-    ## 3 W           -44.4         8.03           -5.53  0.000000467
-    ## 4 U_0          -0.168       0.185          -0.910 0.366      
-    ## 5 N_p          -0.000000402 0.000000203    -1.98  0.0515     
-    ## 6 k_f          -2.28        3.33           -0.685 0.496      
-    ## 7 T_f          -0.00478     0.00115        -4.15  0.0000874
+    ## # A tibble: 18 × 5
+    ##    term        estimate std.error statistic  p.value
+    ##    <chr>          <dbl>     <dbl>     <dbl>    <dbl>
+    ##  1 (Intercept) -3.03e-3   1.66e+0  -0.00183 9.99e- 1
+    ##  2 x            1.02e+0   5.61e-2  18.2     1.66e-26
+    ##  3 L            3.96e+0   9.36e-1   4.23    7.81e- 5
+    ##  4 W           -3.71e+1   6.39e+0  -5.81    2.33e- 7
+    ##  5 U_0         -3.26e-1   1.14e-1  -2.87    5.63e- 3
+    ##  6 N_p          2.72e-7   1.38e-7   1.97    5.33e- 2
+    ##  7 k_f          2.55e+0   2.13e+0   1.20    2.36e- 1
+    ##  8 T_f         -3.79e-4   1.17e-3  -0.323   7.48e- 1
+    ##  9 rho_f       -5.62e-1   3.21e-1  -1.75    8.51e- 2
+    ## 10 mu_f        -8.25e+3   1.47e+4  -0.562   5.76e- 1
+    ## 11 lam_f       -4.68e+0   1.11e+1  -0.420   6.76e- 1
+    ## 12 C_fp        -6.59e-4   3.20e-4  -2.06    4.39e- 2
+    ## 13 rho_p        5.64e-6   1.84e-5   0.307   7.60e- 1
+    ## 14 d_p          1.24e+5   4.49e+4   2.75    7.76e- 3
+    ## 15 C_pv        -7.24e-4   3.72e-4  -1.94    5.64e- 2
+    ## 16 h            1.41e-6   4.87e-5   0.0289  9.77e- 1
+    ## 17 I_0          1.60e-7   4.29e-8   3.73    4.13e- 4
+    ## 18 eps_p        1.11e+0   1.10e+0   1.01    3.18e- 1
 
 ``` r
 glance(fit_q4)
 ```
 
     ## # A tibble: 1 × 12
-    ##   r.squared adj.r.squared sigma statistic      p.value    df logLik   AIC   BIC
-    ##       <dbl>         <dbl> <dbl>     <dbl>        <dbl> <dbl>  <dbl> <dbl> <dbl>
-    ## 1     0.456         0.412 0.372      10.2 0.0000000353     6  -30.8  77.6  96.7
+    ##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
+    ##       <dbl>         <dbl> <dbl>     <dbl>    <dbl> <dbl>  <dbl> <dbl> <dbl>
+    ## 1     0.935         0.917 0.140      52.0 3.46e-30    17   53.9 -69.7 -24.5
     ## # ℹ 3 more variables: deviance <dbl>, df.residual <int>, nobs <int>
 
 ``` r
