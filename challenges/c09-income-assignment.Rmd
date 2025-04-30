@@ -407,3 +407,4 @@ Ideas:
 <!-- ----------------------------------------------------------------------- -->
 
 [1] Spielman SE, Folch DC, Nagle NN (2014) Patterns and causes of uncertainty in the American Community Survey. Applied Geography 46: 147–157. pmid:25404783 [link](https://www.sciencedirect.com/science/article/pii/S0143622813002518?casa_token=VddzQ1-spHMAAAAA:FTq92LXgiPVloJUVjnHs8Ma1HwvPigisAYtzfqaGbbRRwoknNqZ6Y2IzszmGgIGH4JAPzQN0)
+
