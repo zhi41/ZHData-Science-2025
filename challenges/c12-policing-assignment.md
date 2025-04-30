@@ -341,9 +341,8 @@ setdiff(raw_levels, subject_levels)
 - What is the overlap between the two sets? “asian/pacific islander”
   “black”, “hispanic”, “white”, “other”, “unknown
 - What is the difference between the two sets? “A”, “American Indian or
-  Alaskan Native”, “Asian or Pacific Islander”, “Hispanic”, “Middle
-  Eastern or East Indian (South Asian)”, “None - for no operator present
-  citations only” “White”
+  Alaskan Native”, “Middle Eastern or East Indian (South Asian)”,
+  “None - for no operator present citations only”
 
 ### **q4** Check whether `subject_race` and `raw_Race` match for a large fraction of cases. Which of the two hypotheses above is most likely, based on your results?
 
