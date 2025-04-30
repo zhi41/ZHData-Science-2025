@@ -1,7 +1,7 @@
 RMS Titanic
 ================
 Khor Zhi Hong
-2020-
+2020-4-29
 
 - [Grading Rubric](#grading-rubric)
   - [Individual](#individual)
@@ -159,7 +159,6 @@ df_titanic %>% summarize(total = sum(n))
 df_survived<-df_titanic %>%
   filter(Survived == "Yes")
 
-
 ggplot(df_survived, aes(x = Class, y = n, fill = Sex))+ 
   geom_col(position = "dodge") +
   labs(title = "Number of people survived", x = "Class", y = "number of people")+
@@ -167,17 +166,6 @@ ggplot(df_survived, aes(x = Class, y = n, fill = Sex))+
 ```
 
 ![](c01-titanic-assignment_files/figure-gfm/q3-task-1.png)<!-- -->
-
-``` r
-#for presentation
-
-ggplot(df_titanic, aes(x = Class, y = n, fill= Age))+ 
-  geom_col(position = "dodge") +
-  labs(title = "Total number of people on board base on Age", x = "class", y = "number of people")+
-  theme(axis.text.x = element_text(angle = 270, vjust = 0.5, hjust = 0))
-```
-
-![](c01-titanic-assignment_files/figure-gfm/q3-task-2.png)<!-- -->
 
 **Observations**:
 
@@ -248,6 +236,7 @@ df_prop <-
   ) %>%
   ungroup()
 
+
 df_survived<-df_prop %>%
   filter(Survived == "Yes") 
 
@@ -264,8 +253,57 @@ ggplot(df_survived, aes(x = Class, y = Prop, fill = Sex))+
 **Observations**:
 
 - Write your observations here.
+
+  -Desipte having similar number of survivor in male and female for the
+  3rd class, there is higher proportion of females surviving than the
+  males
+
+  -In comparison to Q3 the number of people who survived according to
+  the class and sex, the proportion of male crew members who survived is
+  lowest despite having the highest number of survivor according the
+  class and sex, 0.86956522 of the female crew members survived despite
+  having only 20 survivors. the number of survivors does not necessary
+  correlate to the survival rate of the person in the specific class,
+  sex and age.
+
+  -The proportion of people surviving in the 3rd class is lower than
+  those in the 1st and 2nd class
+
+  -females in the 3rd class and crew have higher proportion of people
+  surviving.
+
+  -both the 1st and 2nd class’s male and female have a 100% survival
+  rate in this plot
+
 - Is there anything *fishy* going on in your plot?
-  - (Your response here)
+
+  - the plot shows a 100% survival rate in both 1st and 2nd class, this
+    maybe a result of the proportion of male and female children
+    survived overlapping the column that shows the proportion of male
+    and female adult survived in the plot. -due to the overlapping
+    columns, the observation made from the plot may not be reliable.
+
+``` r
+df_titanic %>% 
+  group_by(Sex,Class) %>% 
+  summarize(total = sum(n))
+```
+
+    ## `summarise()` has grouped output by 'Sex'. You can override using the `.groups`
+    ## argument.
+
+    ## # A tibble: 8 × 3
+    ## # Groups:   Sex [2]
+    ##   Sex    Class total
+    ##   <chr>  <chr> <dbl>
+    ## 1 Female 1st     145
+    ## 2 Female 2nd     106
+    ## 3 Female 3rd     196
+    ## 4 Female Crew     23
+    ## 5 Male   1st     180
+    ## 6 Male   2nd     179
+    ## 7 Male   3rd     510
+    ## 8 Male   Crew    862
 
 ### **q5** Create a plot showing the group-proportion of occupants who *did* survive, along with aesthetics for `Class`, `Sex`, *and* `Age`. Document your observations below.
 
@@ -301,9 +339,53 @@ ggplot(df_survived, aes(x = Class, y = Prop, fill = Sex))+
 **Observations**:
 
 - (Write your observations here.)
+
+  -Overalll the females in each class for adults have high proportion of
+  survivor compared to the male counter parts. This maybe due to the
+  “women and children first” mindset during the evacuation
+
+  -Children in 1st and 2nd class has a higher proportion of survivor
+  compared to the adult counterparts.
+
+  -males in the 2nd class have lowest proportion of survivior despite
+  the plot showing a decreasing trend of proportion of survivor from 1st
+  class to 3rd class.
+
+  -the 3rd class children have a much lowers proportion of survivor
+  compared the 100% survivor rate in 1st and 2nd class children
+
+  -Desipte the 2nd and 3rd class children having similar number, 24 and
+  27 respectivily, 2nd class children have a much high rate of survivor
+  than 3rd class children
+
+  -Desipte having similar number of survivor in male and female for the
+  3rd class, there is higher proportion of females surviving than the
+  males
+
+  -In comparison to Q3 the number of people who survived according to
+  the class and sex, the proportion of male crew members who survived is
+  lowest despite having the highest number of survivor according the
+  class and sex, 0.86956522 of the female crew members survived despite
+  having only 20 survivors. the number of survivors does not necessary
+  correlate to the survival rate of the person in the specific class,
+  sex and age.
+
+  -The proportion of people surviving in the 3rd class is lower than
+  those in the 1st and 2nd class
+
+  -females in the 3rd class and crew have higher proportion of people
+  surviving.
+
 - If you saw something *fishy* in q4 above, use your new plot to explain
   the fishy-ness.
-  - (Your response here)
+
+  - the plot shows a 100% survival rate in both 1st and 2nd class in q4,
+    this is a result of the proportion of male and female children
+    survived overlapping the column that shows the proportion of male
+    and female adult survived in the plot. thus showing only the 100%
+    survivor of children, covering the proportion of adults survivor.
+
+  s
 
 # Notes
 
