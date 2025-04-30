@@ -55,22 +55,32 @@ In this first stage, you will explore the `diamonds` dataset and document your o
 ```{r q1-task}
 ## TASK: Plot `price` vs `carat` below
 ## Your code here!
+diamonds %>%
+  ggplot(aes(carat, price)) +
+  geom_point()
 ```
 
 **Observations**:
 
-- (Write your observations here!)
+The scatterplot shows that price tends to rise with carat weight, but the relationship is not strictly due to weight as there are substantial overlap in prices.There maybe factors such as cut, color, and clarity to be included to explain price fully.
+
+Price seems generally increases faster than linearly with carat. 
+
 
 ### __q2__ Create a visualization showing variables `carat`, `price`, and `cut` simultaneously. Experiment with which variable you assign to which aesthetic (`x`, `y`, etc.) to find an effective visual.
 
 ```{r q2-task}
 ## TASK: Plot `price`, `carat`, and `cut` below
 ## Your code here!
+diamonds %>%
+  ggplot(aes(carat, price, color = cut)) +
+  geom_point()
 ```
 
 **Observations**:
+The scatterplot shows that price tends to rise with carat weight
+the cut helps with explaining the variation in price according to the cut, ideal tend towards being more expensive and fair tend towards being less expensive
 
-- (Write your observations here!)
 
 
 # Communication

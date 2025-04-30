@@ -98,29 +98,38 @@ document your observations.
 ``` r
 ## TASK: Plot `price` vs `carat` below
 ## Your code here!
-ggplot(diamonds) + geom_point(aes(y=price, x=carat))
+diamonds %>%
+  ggplot(aes(carat, price)) +
+  geom_point()
 ```
 
 ![](c00-diamonds-assignment_files/figure-gfm/q1-task-1.png)<!-- -->
 
 **Observations**:
 
-Price increase with carat
+The scatterplot shows that price tends to rise with carat weight, but
+the relationship is not strictly due to weight as there are substantial
+overlap in prices.There maybe factors such as cut, color, and clarity to
+be included to explain price fully.
+
+Price seems generally increases faster than linearly with carat.
 
 ### **q2** Create a visualization showing variables `carat`, `price`, and `cut` simultaneously. Experiment with which variable you assign to which aesthetic (`x`, `y`, etc.) to find an effective visual.
 
 ``` r
 ## TASK: Plot `price`, `carat`, and `cut` below
 ## Your code here!
-ggplot(diamonds) + geom_point(aes(y=price, x=carat, color=cut))
+diamonds %>%
+  ggplot(aes(carat, price, color = cut)) +
+  geom_point()
 ```
 
 ![](c00-diamonds-assignment_files/figure-gfm/q2-task-1.png)<!-- -->
 
-**Observations**: price increases with carat the cut helps with
-explaining the variation in price according to the cut, ideal tend
-towards being more expensive and fair tend towards being less
-expensive - (Write your observations here!)
+**Observations**: The scatterplot shows that price tends to rise with
+carat weight the cut helps with explaining the variation in price
+according to the cut, ideal tend towards being more expensive and fair
+tend towards being less expensive
 
 # Communication
 
