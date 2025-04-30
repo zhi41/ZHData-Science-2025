@@ -506,15 +506,6 @@ and uncertainty.
 (e.g. variance) and sample size.
 
 ``` r
-# ggplot(df_data, aes(x = population, y = income_SE, color = category)) +
-#   geom_point(alpha = 0.7, size = 2) +
-#   labs(
-#     title = "Standard Error vs. Population",
-#     x = "Population",
-#     y = "Standard Error",
-#     color = "Family Size"
-#   ) +
-#   theme_minimal()
 df_data %>% 
   ggplot(aes(population, income_SE, color = category)) +
   geom_point(alpha = 0.7, size = 2) +
