@@ -228,36 +228,52 @@ print("Very good!")
 
 ``` r
 ##
-length(unique(df_stang_long$alloy))
+
+df_stang_long %>%
+  distinct(alloy)
 ```
 
-    ## [1] 1
+    ## # A tibble: 1 × 1
+    ##   alloy  
+    ##   <chr>  
+    ## 1 al_24st
 
 ``` r
-length(unique(df_stang_long$angle))
+df_stang_long %>%
+  distinct(angle) 
 ```
 
-    ## [1] 3
+    ## # A tibble: 3 × 1
+    ##   angle
+    ##   <int>
+    ## 1     0
+    ## 2    45
+    ## 3    90
 
 ``` r
-length(unique(df_stang_long$thick))
+df_stang_long %>%
+  distinct(thick) 
 ```
 
-    ## [1] 4
+    ## # A tibble: 4 × 1
+    ##   thick
+    ##   <dbl>
+    ## 1 0.022
+    ## 2 0.032
+    ## 3 0.064
+    ## 4 0.081
 
 **Observations**:
 
-- ## Is there “one true value” for the material properties of Aluminum?
-
+- Is there “one true value” for the material properties of Aluminum?
+  - No. Aluminum’s elastic modulus E and Poisson’s ratio nu which
+    changes the value of material properties of aluminum.
 - How many aluminum alloys are in this dataset? How do you know?
   - 1, find the length of unique alloy in dataset, shown in q2-task
-
 - What angles were tested?
   - 3
-
 - What thicknesses were tested?
   - 4
-
 - (Write your own question here) -investigate if there is a relationship
   between E and nu
 
@@ -269,12 +285,16 @@ length(unique(df_stang_long$thick))
 
 ``` r
 ## TASK: Investigate your question from q1 here
-ggplot(df_stang_long, aes(x=E,y=nu))+
+df_stang_long %>%
+  ggplot(aes(E, nu)) +
   geom_point(aes(color = alloy)) +
-  geom_smooth(method = "lm", color="red")+
-  labs(tittle="E and nu", 
-  x="young's modulus(E)",
-  y="poisson's ratio(nu)")
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(
+    title = "Young's Modulus vs. Poisson's Ratio",
+    x     = "Young's modulus (E)",
+    y     = "Poisson's ratio (ν)",
+    color = "Alloy"
+  )
 ```
 
     ## `geom_smooth()` using formula = 'y ~ x'
@@ -282,7 +302,10 @@ ggplot(df_stang_long, aes(x=E,y=nu))+
 ![](c03-stang-assignment_files/figure-gfm/q3-task-1.png)<!-- -->
 
 ``` r
-correlation <- cor(df_stang_long$E, df_stang_long$nu, use = "complete.obs")
+correlation <- df_stang_long %>%
+  summarise(correlation = cor(E, nu, use = "complete.obs")) %>%
+  pull(correlation)
+
 correlation
 ```
 

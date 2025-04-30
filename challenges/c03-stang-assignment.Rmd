@@ -111,15 +111,22 @@ print("Very good!")
 
 ```{r q2-task}
 ##
-length(unique(df_stang_long$alloy))
-length(unique(df_stang_long$angle))
-length(unique(df_stang_long$thick))
+
+df_stang_long %>%
+  distinct(alloy)
+
+df_stang_long %>%
+  distinct(angle) 
+
+df_stang_long %>%
+  distinct(thick) 
 ```
 
 **Observations**:
 
 - Is there "one true value" for the material properties of Aluminum?
-  - 
+  - No. Aluminum’s elastic modulus E and Poisson’s ratio nu which changes the value of material properties of aluminum.
+  
 - How many aluminum alloys are in this dataset? How do you know?
   - 1, find the length of unique alloy in dataset, shown in q2-task
   
@@ -139,14 +146,21 @@ length(unique(df_stang_long$thick))
 
 ```{r q3-task}
 ## TASK: Investigate your question from q1 here
-ggplot(df_stang_long, aes(x=E,y=nu))+
+df_stang_long %>%
+  ggplot(aes(E, nu)) +
   geom_point(aes(color = alloy)) +
-  geom_smooth(method = "lm", color="red")+
-  labs(tittle="E and nu", 
-  x="young's modulus(E)",
-  y="poisson's ratio(nu)")
-  
-correlation <- cor(df_stang_long$E, df_stang_long$nu, use = "complete.obs")
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(
+    title = "Young's Modulus vs. Poisson's Ratio",
+    x     = "Young's modulus (E)",
+    y     = "Poisson's ratio (ν)",
+    color = "Alloy"
+  )
+
+correlation <- df_stang_long %>%
+  summarise(correlation = cor(E, nu, use = "complete.obs")) %>%
+  pull(correlation)
+
 correlation
 ```
 
