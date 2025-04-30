@@ -220,25 +220,30 @@ can.
 ``` r
 ## TASK: Create a visual of gdpPercap vs continent
 
-gapminder_min_year <- gapminder %>% 
+gapminder_min_year <- gapminder %>%
   filter(year == year_min)
 
-
-ggplot(gapminder_min_year, aes(x = continent, y = gdpPercap)) +
+gapminder_min_year %>%
+  ggplot(aes(continent, gdpPercap)) +
   geom_boxplot() +
-  labs(title = paste("GDP per Capita by Continent", year_min),
-       x = "Continent",
-       y = "GDP per Capita")
+  labs(
+    title = paste("GDP per Capita by Continent", year_min),
+    x     = "Continent",
+    y     = "GDP per Capita"
+  )
 ```
 
 ![](c04-gapminder-assignment_files/figure-gfm/q2-task-1.png)<!-- -->
 
 ``` r
-ggplot(gapminder_min_year, aes(x = continent, y = log10(gdpPercap))) +
+gapminder_min_year %>%
+  ggplot(aes(continent, log10(gdpPercap))) +
   geom_boxplot() +
-  labs(title = paste("Log10 GDP per Capita by Continent ", year_min),
-       x = "Continent",
-       y = "Log10 GDP per Capita")
+  labs(
+    title = paste("Log10 GDP per Capita by Continent", year_min),
+    x     = "Continent",
+    y     = "Log10 GDP per Capita"
+  )
 ```
 
 ![](c04-gapminder-assignment_files/figure-gfm/q2-task-2.png)<!-- -->
@@ -266,12 +271,23 @@ ggplot(gapminder_min_year, aes(x = continent, y = log10(gdpPercap))) +
 ``` r
 ## TASK: Identify the outliers from q2
 
-ggplot(gapminder_min_year, aes(x = continent, y = log10(gdpPercap))) +
+library(ggrepel)
+
+gapminder %>% 
+  filter(year == year_min) %>% 
+  mutate(is_outlier = gdpPercap %in% boxplot.stats(gdpPercap)$out) %>% 
+  ggplot(aes(continent, log10(gdpPercap))) +
   geom_boxplot() +
-  geom_text(aes(label = ifelse(gdpPercap %in% boxplot.stats(gdpPercap)$out, as.character(country), ""))) +
-  labs(title = paste("GDP per Capita by Continent in", year_min),
-       x = "Continent",
-       y = "GDP per Capita")
+  geom_text_repel(
+    data = . %>% filter(is_outlier),
+    aes(label = country),
+    max.overlaps = Inf
+  ) +
+  labs(
+    title = paste("GDP per Capita by Continent in", year_min),
+    x = "Continent",
+    y = "log10 GDP per Capita"
+  )
 ```
 
 ![](c04-gapminder-assignment_files/figure-gfm/q3-task-1.png)<!-- -->
@@ -409,33 +425,7 @@ ggplot(gapminder_selected_years, aes(x = continent, y = gdpPercap)) +
   among the other continent and remained that way over the years -Africa
   remains the lowest gdp per capita and does not show much improvement
   over 55 years which may be due to the geography as other continent
-  ahve shown significant improvements -singapore have greatly improved
-  over the years with the becoming it the highest gdp per capita in 2007
-
-``` r
-# 
-
-# gapminder_selected_years <- gapminder %>%
-#   filter(year %in% c(year_min, year_max))
-# 
-# 
-# gapminder_selected_years <- gapminder_selected_years %>%
-#   group_by(year, continent) %>%
-#   mutate(
-#     iqr = IQR(gdpPercap),
-#     q1 = quantile(gdpPercap, 0.25),
-#     q3 = quantile(gdpPercap, 0.75),
-#     lower_bound = q1 - 1.5 * iqr,
-#     upper_bound = q3 + 1.5 * iqr
-#   )
-# 
-# 
-# outlier_countries <- gapminder_selected_years %>%
-#   filter(gdpPercap < lower_bound | gdpPercap > upper_bound) %>%
-#   select(country, gdpPercap, continent, year)
-# 
-# print(outlier_countries)
-```
+  ahve shown significant improvements
 
 # Your Own EDA
 
@@ -538,17 +528,22 @@ outlier_countries <- gapminder_selected_years %>%
 
 
 
-ggplot(gapminder_selected_years, aes(x = continent, y = lifeExp)) +
+gapminder_selected_years %>%                     
+  ggplot(aes(continent, lifeExp)) +
   geom_boxplot() +
   geom_point(
-    data = gapminder_selected_years %>% filter(country %in% outlier_countries),
+    data = gapminder_selected_years %>%          
+      filter(country %in% outlier_countries),
     aes(color = country),
     size = 2
   ) +
-  facet_wrap(~year) +
-  labs(title = "Life Expectancy by Continent for Min and Max Years",
-       x = "Continent",
-       y = "Life Expectancy") 
+  facet_wrap(~ year) +
+  labs(
+    title = "Life Expectancy by Continent for Min and Max Years",
+    x     = "Continent",
+    y     = "Life Expectancy",
+    color = "Outlier Country"
+  )
 ```
 
 ![](c04-gapminder-assignment_files/figure-gfm/q5-task3-1.png)<!-- -->
