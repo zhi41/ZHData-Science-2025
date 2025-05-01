@@ -1,7 +1,7 @@
 Antibiotics
 ================
 Khor Zhi Hong
-2020-3-4
+2020-30-4
 
 *Purpose*: Creating effective data visualizations is an *iterative*
 process; very rarely will the first graph you make be the most
@@ -183,22 +183,47 @@ is Gram positive or negative.
 # WRITE YOUR CODE HERE
 
 
-df_antibiotics_1 <- df_antibiotics %>%
-  pivot_longer(cols = c(penicillin, streptomycin, neomycin), names_to = "antibiotic", values_to = "MIC") %>%
-    mutate(gram_status = ifelse(gram == "positive", "Gram-positive", "Gram-negative"))
-
-
-df_antibiotics_1 %>%
-  ggplot(aes(x = bacteria, y = MIC, fill = antibiotic)) +
-  geom_bar(stat = "identity") +
-  scale_fill_manual(values = c("penicillin" = "green", "streptomycin" = "blue", "neomycin" = "orange")) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+df_antibiotics %>% 
+  pivot_longer(
+    cols  = c(penicillin, streptomycin, neomycin),
+    names_to  = "antibiotic",
+    values_to = "MIC"
+  ) %>% 
+  mutate(
+    gram_status = if_else(gram == "positive", "Gram-positive", "Gram-negative")
+  ) %>% 
+  ggplot(aes(bacteria, MIC, fill = antibiotic)) +
+  geom_bar(
+    stat     = "identity",
+    position = position_dodge(width = 1)
+  ) +
+  scale_y_log10(
+    labels = scales::label_log(),
+    breaks = scales::log_breaks()
+  ) +
+  geom_hline(
+    yintercept = 0.1,
+    linetype   = "dashed",
+    colour     = "red",
+  ) +
+  scale_fill_manual(
+    values = c(
+      penicillin   = "green",
+      streptomycin = "blue",
+      neomycin     = "orange"
+    )
+  ) +
   facet_wrap(~ gram_status) +
   labs(
-    title = "MIC of Antibiotics on Different Bacteria",
-    x = "Bacteria",
-    y = "MIC",
-    fill = "Antibiotic")
+    title = "MIC of Three Antibiotics Against Different Bacteria",
+    x     = "Bacterium",
+    y     = "MIC (log scale)",
+    fill  = "Antibiotic"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)
+  )
 ```
 
 ![](c05-antibiotics-assignment_files/figure-gfm/q1.1-1.png)<!-- -->
@@ -252,22 +277,35 @@ Note that your visual must be *qualitatively different* from *all* of
 your other visuals.
 
 ``` r
-df_antibiotics_3 <- df_antibiotics %>%
-  pivot_longer(cols = c(penicillin, streptomycin, neomycin), names_to = "antibiotic", values_to = "MIC") %>%
-  mutate(gram_status = ifelse(gram == "positive", "Gram-positive", "Gram-negative"))
+library(tidyverse)
 
+df_antibiotics %>% 
+  pivot_longer(
+    c(penicillin, streptomycin, neomycin),
+    names_to  = "antibiotic",
+    values_to = "MIC"
+  ) %>% 
+  mutate(gram_status = if_else(gram == "positive", "Gram-positive", "Gram-negative")) %>% 
+  ggplot(aes(MIC, fct_rev(bacteria), fill = antibiotic)) +
+  geom_col(position = position_dodge(width = 0.8)) +     
+  scale_x_log10(                                          
+    breaks = c(0.01, 0.1, 1, 10, 100),
+    labels = c("0.01", "0.1", "1", "10", "100")
+  ) +
 
-df_antibiotics_3 %>%
-  ggplot(aes(x = antibiotic, y = MIC, fill = antibiotic)) +
-  geom_bar(stat = "identity", position = "dodge", width = 1) +
-  scale_fill_manual(values = c("penicillin" = "darkorange", "streptomycin" = "forestgreen", "neomycin" = "dodgerblue")) +
-  facet_wrap(~ bacteria, scales = "free_y") +
-  labs(title = "MIC of Antibiotics on Different Bacteria",
-       x = "Antibiotic",
-       y = "MIC",
-       fill = "Antibiotic") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  scale_fill_manual(values = c(
+    penicillin   = "orange",
+    streptomycin = "green",
+    neomycin     = "blue"
+  )) +
+  facet_wrap(~ gram_status, scales = "free_y") +            
+  labs(
+    title = "MIC of Three Antibiotics Across Bacteria (log scale)",
+    x     = "MIC (log scale)",
+    y     = "Bacterium",
+    fill  = "Antibiotic"
+  ) +
+  theme_minimal()
 ```
 
 ![](c05-antibiotics-assignment_files/figure-gfm/q1.3-1.png)<!-- -->
@@ -284,23 +322,22 @@ your other visuals.
 ``` r
 # WRITE YOUR CODE HERE
 
-df_antibiotics_4 <- df_antibiotics %>%
-  pivot_longer(cols = c(penicillin, streptomycin, neomycin), names_to = "antibiotic", values_to = "MIC") %>%
-  mutate(gram_status = ifelse(gram == "positive", "Gram-positive", "Gram-negative"))
 
-
-df_antibiotics_4 %>%
-  ggplot(aes(x = antibiotic, y = bacteria, size = MIC, color = gram_status)) +
-  geom_point(alpha = 0.7) +
-  scale_size_continuous(range = c(2, 11)) +
-  scale_color_manual(values = c("Gram-positive" = "red", "Gram-negative" = "blue")) +
+df_antibiotics %>% 
+  pivot_longer(
+    c(penicillin, streptomycin, neomycin),
+    names_to  = "antibiotic",
+    values_to = "MIC"
+  ) %>% 
+  mutate(log_MIC = log10(MIC)) %>% 
+  ggplot(aes(antibiotic, fct_rev(bacteria), fill = log_MIC)) +
+  geom_tile(colour = "white") +
   labs(
-  title = "MIC of Antibiotics on Different Bacteria",
-  x = "Antibiotic",
-  y = "Bacteria",
-  size = "MIC",
-  color = "Gram Status") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) 
+    title = "MIC of Three Antibiotics Across Bacteria (log scale)",
+    x     = "Antibiotic",
+    y     = "Bacterium"
+  ) +
+  theme_minimal()
 ```
 
 ![](c05-antibiotics-assignment_files/figure-gfm/q1.4-1.png)<!-- -->
@@ -364,18 +401,18 @@ and especially ineffective against Aerobacter aerogenes, Klebsiella
 pneumoniae, Mycobacterium tuberculosis and Pseudomonas aeruginosa with
 MIC values ~800 and above.
 
-- streptomycin and neomycin have a broader range of effectiveness
-  against both Gram-positive and Gram-negative bacteria, but have both
-  have slight similar effect for most of the bacteria.
+-Penicillin is very effective against Gram-positive bacteria but doesn’t
+do much against Gram-negative ones. Streptomycin and neomycin, in
+contrast, work on both types: streptomycin’s strength is fairly even no
+matter the bug, while neomycin can hit some hard-to-treat Gram-negative
+bacteria especially well, though it may be slightly less potent than
+streptomycin on a few Gram-positive strains.
 
 - Which of your visuals above (1 through 5) is **most effective** at
   helping to answer this question?
-
   - Visual 2, df_antibiotics_2: Dot Plot with shapes showing the type
     antibodies
-
 - Why?
-
   - df_antibiotics_3 is most effective to show which of antibiotics MIC
     is below 0.1 but is lacking the Gram stain categorization thus not
     chosen. The Dot Plot with shapes showing antibodies,
@@ -405,13 +442,11 @@ distinguished from other species using rMLST.
 
 - Which of your visuals above (1 through 5) is **most effective** at
   helping to answer this question?
-  - None
-- Why?
-  - It is a historical and biological question rather than one that can
-    be answered directly through visual data analysis. The visuals are
-    more suited for analyzing the effectiveness of antibiotics against
-    bacteria and their Gram stain status, but not for reason why name
-    changes.
+  - 3
+- Why? from the visualisation S. pneumoniae responds to penicillin
+  similarly Streptococcus bacteria, with low MIC values showing it is
+  sensitive which maybe used to link it to be like Streptococcus than
+  other bacteria,and maybe the reason to move it into that group.
 
 # References
 
